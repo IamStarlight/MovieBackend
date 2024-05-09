@@ -1,0 +1,43 @@
+server:
+  port: 3309
+
+spring:
+  application:
+    name: movie
+
+#    data:
+#      redis:
+#        host: 127.0.0.1
+#        port: 6379
+#        password: 123456
+#        database: 0
+#        timeout: 5000
+
+#  datasource:
+#    name: 'movie'
+#    url: jdbc:mysql://localhost:3306/warehouse?serverTimezone=GMT
+#    username: 'root'
+#    password: 'root'
+#    driver-class-name: com.mysql.jdbc.Driver
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm
+    time-zone: GMT+8
+
+  main:
+    allow-circular-references: true
+
+
+#logging:
+#  level:
+#    com.fishpro.log: debug
+
+mybatis-plus:
+  type-aliases-package: com.bjtu.entity
+  mapper-locations: classpath:/mappers/*.xml
+
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
