@@ -1,5 +1,6 @@
 package com.bjtu.movie.controller;
 
+import com.bjtu.movie.annotation.CurrentUser;
 import com.bjtu.movie.entity.User;
 import com.bjtu.movie.service.impl.UserServiceImpl;
 import com.bjtu.movie.utils.Result;
@@ -7,10 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class LogController {
@@ -19,11 +17,22 @@ public class LogController {
     private UserServiceImpl userService;
 
     /**
+     * 注册用户
+     * @param newUser
+     * @return
+     */
+    @PostMapping("/signup")
+    public ResponseEntity<Result> register(@RequestBody @Valid User newUser){
+        userService.register(newUser);
+        return new ResponseEntity<>((Result.success()), HttpStatus.OK);
+    }
+
+    /**
      * 登录用户
      * @param user
      * @return
      */
-    @PostMapping("/login")
+    @GetMapping("/login")
     public ResponseEntity<Result> login(@RequestBody @Valid User user){
         return new ResponseEntity<>(Result.success(userService.login(user)), HttpStatus.OK);
     }
@@ -32,7 +41,7 @@ public class LogController {
      * 登出用户
      * @return
      */
-    @DeleteMapping("/logout")
+    @GetMapping("/logout")
     public ResponseEntity<Result> logout(){
         userService.logout();
         return new ResponseEntity<>(Result.success(), HttpStatus.OK);

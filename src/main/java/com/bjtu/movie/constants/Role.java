@@ -1,4 +1,4 @@
-package com.bjtu.movie.enums;
+package com.bjtu.movie.constants;
 
 public enum Role {
     ROLE_SUPER_ADMIN("ROLE_SUPER_ADMIN", "超级管理员"),

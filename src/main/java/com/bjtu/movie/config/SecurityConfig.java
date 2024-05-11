@@ -19,6 +19,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity //注解代替继承
@@ -43,14 +44,11 @@ public class SecurityConfig {
                                            JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter,
                                            AuthenticationHandler authenticationHandler) throws Exception{
         http
-//                .authorizeHttpRequests(auth -> auth
-//                        //对于登录接口 允许匿名访问
-//                        .requestMatchers("/user/login","/user/register").permitAll()
-//                        //除上面外的所有请求全部需要鉴权认证
-//                        .anyRequest().authenticated())
-//                .formLogin(form -> form.loginProcessingUrl("/login")
-//                        .usernameParameter("name")
-//                        .passwordParameter("password"))
+                .authorizeHttpRequests(auth -> auth
+                        //对于登录接口 允许匿名访问
+                        .requestMatchers("/login","/signup").permitAll()
+                        //除上面外的所有请求全部需要鉴权认证
+                        .anyRequest().authenticated())
 
                 //关闭csrf
                 .csrf(AbstractHttpConfigurer::disable)

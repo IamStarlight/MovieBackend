@@ -1,6 +1,7 @@
 package com.bjtu.movie.controller;
 
 
+import com.bjtu.movie.annotation.CurrentUser;
 import com.bjtu.movie.entity.User;
 import com.bjtu.movie.service.impl.UserServiceImpl;
 import com.bjtu.movie.utils.Result;
@@ -8,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -26,27 +28,26 @@ public class UserController {
     private UserServiceImpl userService;
 
     /**
-     * 注册用户
-     * @param newUser
-     * @return
-     */
-    @PostMapping
-//    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
-    public ResponseEntity<Result> register(@RequestBody @Valid User newUser){
-        userService.register(newUser);
-        return new ResponseEntity<>((Result.success()), HttpStatus.OK);
-    }
-
-    /**
-     * 重置用户密码
-     * @param id
+     * 重置自己的密码
+     * @param user
      * @param password
      * @return
      */
-    @PutMapping("/{id}")
-//    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
-    public ResponseEntity<Result> updateUserInfo(@PathVariable String id,@RequestParam String password){
-        userService.resetPassword(id,password);
+    @PutMapping("/security")
+    public ResponseEntity<Result> updateUserPassword(@CurrentUser User user,@RequestParam String password){
+        userService.resetPassword(user.getId(),password);
+        return new ResponseEntity<>((Result.success()),HttpStatus.OK);
+    }
+
+    /**
+     * 重置自己的信息（不包括密码）
+     * @param user
+     * @param info
+     * @return
+     */
+    @PutMapping
+    public ResponseEntity<Result> updateUserInfo(@CurrentUser User user, @RequestBody User info){
+        userService.resetInfo(user.getId(),info);
         return new ResponseEntity<>((Result.success()),HttpStatus.OK);
     }
 
@@ -55,8 +56,9 @@ public class UserController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<Result> getAll(){
-        return new ResponseEntity<>(Result.success(userService.list()), HttpStatus.OK);
+    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+    public ResponseEntity<Result> getAllUser(){
+        return new ResponseEntity<>(Result.success(userService.getAllUser()), HttpStatus.OK);
     }
 
     /**
@@ -65,13 +67,21 @@ public class UserController {
      * @return
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Result> getOne(@PathVariable String id){
-        return new ResponseEntity<>(Result.success(userService.getById(id)), HttpStatus.OK);
+    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+    public ResponseEntity<Result> getOneUser(@PathVariable String id){
+        return new ResponseEntity<>(Result.success(userService.getOneUser(id)), HttpStatus.OK);
     }
 
-    @GetMapping("/name")
-    public ResponseEntity<Result> getOneByNamE(@RequestParam(value = "name") String name){
-        return new ResponseEntity<>(Result.success(userService.getByName(name)), HttpStatus.OK);
+    /**
+     * 删除一个用户
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+    public ResponseEntity<Result> deleteOneUser(@PathVariable String id) {
+        userService.deleteOneUser(id);
+        return new ResponseEntity<>(Result.success(), HttpStatus.OK);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.bjtu.movie.config;
 
-import com.alibaba.fastjson.support.spring.FastJsonRedisSerializer;
+
+import com.bjtu.movie.utils.FastJsonRedisSerializer;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

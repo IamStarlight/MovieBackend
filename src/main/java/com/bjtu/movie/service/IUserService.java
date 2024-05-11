@@ -26,15 +26,13 @@ public interface IUserService extends IService<User> {
 
     User getByName(String name);
 
-    List<User> getAllAdmin();
-
-    User getOneAdmin(String id);
-
-    boolean hasSuperAdmin();
-
-    void initSuperAdmin();
-
     void resetPassword(String id, String password);
 
-    void deleteOneAdmin(String id);
+    void resetInfo(String id, User info);
+
+    List<User> getAllUser();
+
+    User getOneUser(String id);
+
+    void deleteOneUser(String id);
 }

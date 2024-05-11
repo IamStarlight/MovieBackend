@@ -1,5 +1,6 @@
 package com.bjtu.movie.filter;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bjtu.movie.exception.ServiceException;
 import com.bjtu.movie.utils.JwtUtil;
 import com.bjtu.movie.utils.LoginUser;
@@ -48,7 +49,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         }
         //从redis中获取用户信息
         String redisKey = "login:" + userid;
-        LoginUser loginUser = redisCache.getCacheObject(redisKey);
+        JSONObject jsonObject = redisCache.getCacheObject(redisKey);
+        LoginUser loginUser = jsonObject.toJavaObject(LoginUser.class);
         if(Objects.isNull(loginUser)){
             throw new ServiceException(HttpStatus.FORBIDDEN.value(),"用户未登录");
         }

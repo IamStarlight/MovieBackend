@@ -12,35 +12,36 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 
+ * 管理员表
  * </p>
  *
  * @author Jinxuan Chen
- * @since 2024-05-10
+ * @since 2024-05-11
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("user")
-@ApiModel(value="User对象", description="")
-public class User implements Serializable {
+@TableName("admin")
+@ApiModel(value="Admin对象", description="管理员表")
+public class Admin implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "用户id")
+    @ApiModelProperty(value = "管理员id")
     @TableId(value = "id", type = IdType.AUTO)
     private String id;
 
-    @ApiModelProperty(value = "用户名")
+    @ApiModelProperty(value = "管理员名称")
     private String name;
 
-    @ApiModelProperty(value = "用户密码")
+    @ApiModelProperty(value = "管理员密码")
     private String password;
 
-    @ApiModelProperty(value = "用户权限")
+    @ApiModelProperty(value = "管理员权限")
     private String permission;
 
     @ApiModelProperty(value = "创建时间")
     private String createdAt;
+
 
 }

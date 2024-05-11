@@ -2,7 +2,7 @@ package com.bjtu.movie.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.bjtu.movie.entity.User;
-import com.bjtu.movie.enums.Role;
+import com.bjtu.movie.constants.Role;
 import com.bjtu.movie.exception.ServiceException;
 import com.bjtu.movie.mapper.UserMapper;
 import com.bjtu.movie.service.IUserService;
@@ -98,44 +98,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return getOne(wrapper);
     }
 
-    @Override
-    public List<User> getAllAdmin() {
-        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(User::getPermission, Role.ROLE_ADMIN.getValue());
-        return listObjs(wrapper);
-    }
-
-    @Override
-    public User getOneAdmin(String id) {
-        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(User::getPermission, Role.ROLE_ADMIN.getValue())
-                .eq(User::getId,id);
-        return getOne(wrapper);
-    }
-
-    @Override
-    public boolean hasSuperAdmin(){
-        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(User::getPermission, Role.ROLE_SUPER_ADMIN.getValue());
-        User superAdmin = getOne(wrapper);
-        if(superAdmin == null)
-            return false;
-        else return true;
-    }
-
-    @Override
-    public void initSuperAdmin() {
-        //如果存在超级管理员，禁止操作
-        if(hasSuperAdmin())
-            throw new ServiceException(HttpStatus.FORBIDDEN.value(), "超级管理员已存在");
-        User superAdmin = new User();
-        superAdmin.setName("超级管理员");
-        superAdmin.setPassword(encodePassword("123"));
-        superAdmin.setPermission(Role.ROLE_SUPER_ADMIN.getValue());
-        superAdmin.setCreatedAt(DateTimeUtil.getNowTimeString());
-        save(superAdmin);
-    }
-
     private String encodePassword(String password){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return passwordEncoder.encode(password);
@@ -151,9 +113,33 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public void deleteOneAdmin(String id) {
-        if(getOneAdmin(id) == null)
-            throw new ServiceException(HttpStatus.NOT_FOUND.value(), "该管理员不存在");
+    public void resetInfo(String id, User info) {
+        User user = getById(id);
+        if(user == null){
+            throw new ServiceException(HttpStatus.NOT_FOUND.value(),"用户不存在");
+        }
+        info.setId(id);
+        updateById(info);
+    }
+
+    @Override
+    public List<User> getAllUser() {
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getPermission,Role.ROLE_USER.getValue());
+        return listObjs(wrapper);
+    }
+
+    @Override
+    public User getOneUser(String id) {
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getPermission,Role.ROLE_USER.getValue());
+        return getOne(wrapper);
+    }
+
+    @Override
+    public void deleteOneUser(String id) {
+        if(getById(id) == null)
+            throw new ServiceException(HttpStatus.NOT_FOUND.value(), "用户不存在");
         removeById(id);
     }
 }
