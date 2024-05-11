@@ -1,9 +1,10 @@
 package com.bjtu.movie.filter;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bjtu.movie.domain.LoginAdmin;
+import com.bjtu.movie.domain.LoginUser;
 import com.bjtu.movie.exception.ServiceException;
 import com.bjtu.movie.utils.JwtUtil;
-import com.bjtu.movie.domain.LoginUser;
 import com.bjtu.movie.utils.RedisCache;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -21,9 +22,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Objects;
 
-
 @Component
-public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
+public class AdminJwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
     @Autowired
     private RedisCache redisCache;
@@ -50,21 +50,20 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         //从redis中获取用户信息
         String redisKey = "login:" + userid;
         JSONObject jsonObject = redisCache.getCacheObject(redisKey);
-        LoginUser loginUser = jsonObject.toJavaObject(LoginUser.class);
-        if(Objects.isNull(loginUser)){
+        LoginAdmin loginAdmin = jsonObject.toJavaObject(LoginAdmin.class);
+        if(Objects.isNull(loginAdmin)){
             throw new ServiceException(HttpStatus.NOT_FOUND.value(),"用户未登录");
         }
         //存入SecurityContextHolder
         //获取权限信息封装到Authentication中
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(
-                        loginUser,null,loginUser.getAuthorities());
+                        loginAdmin,null,loginAdmin.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-        request.setAttribute("CurrentUser",loginUser.getUser());
+        request.setAttribute("CurrentUser",loginAdmin.getAdmin());
 
         //放行
         filterChain.doFilter(request, response);
     }
 }
-

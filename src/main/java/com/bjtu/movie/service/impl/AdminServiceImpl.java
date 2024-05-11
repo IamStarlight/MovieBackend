@@ -1,18 +1,30 @@
 package com.bjtu.movie.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.bjtu.movie.entity.Admin;
+import com.bjtu.movie.controller.dto.LoginDto;
+import com.bjtu.movie.domain.Admin;
 import com.bjtu.movie.constants.Role;
+import com.bjtu.movie.domain.LoginAdmin;
+import com.bjtu.movie.domain.LoginUser;
+import com.bjtu.movie.domain.User;
 import com.bjtu.movie.exception.ServiceException;
 import com.bjtu.movie.mapper.AdminMapper;
 import com.bjtu.movie.service.IAdminService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bjtu.movie.utils.DateTimeUtil;
+import com.bjtu.movie.utils.JwtUtil;
+import com.bjtu.movie.utils.RedisCache;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -24,6 +36,12 @@ import java.util.List;
  */
 @Service
 public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements IAdminService {
+
+    @Autowired
+    private RedisCache redisCache;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @Override
     public void initSuperAdmin() {
@@ -90,5 +108,57 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         }
         info.setId(id);
         updateById(info);
+    }
+
+    @Override
+    public Admin getByName(String name){
+        LambdaQueryWrapper<Admin> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Admin::getName,name);
+        return getOne(wrapper);
+    }
+
+    @Override
+    public void adminRegister(Admin newAdmin) {
+        if(getByName(newAdmin.getName()) != null)
+            throw new ServiceException(HttpStatus.FORBIDDEN.value(), "用户名已存在");
+        newAdmin.setPassword(encodePassword(newAdmin.getPassword()));
+        newAdmin.setCreatedAt(DateTimeUtil.getNowTimeString());
+        newAdmin.setPermission(Role.ROLE_USER.getValue());
+        save(newAdmin);
+    }
+
+    @Override
+    public String getPermission(String id){
+        return getById(id).getPermission();
+    }
+
+    public HashMap<String,String> loginAdmin(LoginDto dto) {
+
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(dto.getName(), dto.getPassword());
+
+        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+
+        if(Objects.isNull(authenticate)) {
+            throw new ServiceException(HttpStatus.UNAUTHORIZED.value(), "用户名或密码错误");
+        }
+
+        //使用userid生成token
+        LoginAdmin loginUser = (LoginAdmin) authenticate.getPrincipal();
+        String userId = loginUser.getAdmin().getId();
+        String jwt = JwtUtil.createJWT(userId);
+
+        //authenticate存入redis
+        redisCache.setCacheObject("login:"+userId,loginUser);
+
+        //把token响应给前端
+        HashMap<String,String> map = new HashMap<>();
+        Admin nowAdmin = loginUser.getAdmin();
+        map.put("token",jwt);
+        map.put("permission",nowAdmin.getPermission());
+        map.put("name", nowAdmin.getName());
+        map.put("id", nowAdmin.getId());
+
+        return map;
     }
 }

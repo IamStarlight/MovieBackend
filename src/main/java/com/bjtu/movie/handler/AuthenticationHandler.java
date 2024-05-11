@@ -1,7 +1,7 @@
 package com.bjtu.movie.handler;
 
 import com.alibaba.fastjson.JSON;
-import com.bjtu.movie.utils.Result;
+import com.bjtu.movie.domain.Result;
 import com.bjtu.movie.utils.WebUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

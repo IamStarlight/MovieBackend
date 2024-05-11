@@ -1,9 +1,8 @@
 package com.bjtu.movie.handler;
 
 import com.bjtu.movie.exception.ServiceException;
-import com.bjtu.movie.utils.Result;
+import com.bjtu.movie.domain.Result;
 import jakarta.validation.ConstraintViolationException;
-import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

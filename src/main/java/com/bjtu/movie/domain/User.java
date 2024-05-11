@@ -1,4 +1,4 @@
-package com.bjtu.movie.entity;
+package com.bjtu.movie.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;

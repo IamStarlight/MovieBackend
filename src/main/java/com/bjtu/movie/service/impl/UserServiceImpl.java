@@ -1,7 +1,8 @@
 package com.bjtu.movie.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.bjtu.movie.entity.User;
+import com.bjtu.movie.controller.dto.LoginDto;
+import com.bjtu.movie.domain.User;
 import com.bjtu.movie.constants.Role;
 import com.bjtu.movie.exception.ServiceException;
 import com.bjtu.movie.mapper.UserMapper;
@@ -9,14 +10,13 @@ import com.bjtu.movie.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bjtu.movie.utils.DateTimeUtil;
 import com.bjtu.movie.utils.JwtUtil;
-import com.bjtu.movie.utils.LoginUser;
+import com.bjtu.movie.domain.LoginUser;
 import com.bjtu.movie.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -57,17 +57,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public void logout() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-        String userid = String.valueOf(loginUser.getUser().getId());
-        redisCache.deleteObject("login:" + userid);
+    public void logout(String id) {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+//        String userid = String.valueOf(loginUser.getUser().getId());
+        redisCache.deleteObject("login:" + id);
     }
 
     @Override
-    public HashMap<String,String> login(User user) {
+    public HashMap<String,String> login(LoginDto dto) {
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(user.getName(), user.getPassword());
+                new UsernamePasswordAuthenticationToken(dto.getName(), dto.getPassword());
 
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
 
@@ -85,8 +85,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         //把token响应给前端
         HashMap<String,String> map = new HashMap<>();
+        User nowUser = loginUser.getUser();
         map.put("token",jwt);
-        map.put("permission",loginUser.getUser().getPermission());
+        map.put("permission",nowUser.getPermission());
+        map.put("name", nowUser.getName());
+        map.put("id", nowUser.getId());
 
         return map;
     }

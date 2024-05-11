@@ -1,7 +1,8 @@
 package com.bjtu.movie.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.bjtu.movie.entity.User;
+import com.bjtu.movie.controller.dto.LoginDto;
+import com.bjtu.movie.domain.User;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,9 +21,9 @@ public interface IUserService extends IService<User> {
 
     void register(User newUser);
 
-    void logout();
+    void logout(String id);
 
-    HashMap<String,String> login(User user);
+    HashMap<String,String> login(LoginDto dto);
 
     User getByName(String name);
 

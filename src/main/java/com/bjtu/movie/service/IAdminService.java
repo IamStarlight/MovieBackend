@@ -1,6 +1,6 @@
 package com.bjtu.movie.service;
 
-import com.bjtu.movie.entity.Admin;
+import com.bjtu.movie.domain.Admin;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -28,4 +28,10 @@ public interface IAdminService extends IService<Admin> {
     void resetPassword(String id, String password);
 
     void resetInfo(String id, Admin info);
+
+    Admin getByName(String name);
+
+    void adminRegister(Admin newAdmin);
+
+    String getPermission(String id);
 }

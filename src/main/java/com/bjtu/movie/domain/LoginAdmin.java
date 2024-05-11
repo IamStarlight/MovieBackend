@@ -1,7 +1,6 @@
-package com.bjtu.movie.utils;
+package com.bjtu.movie.domain;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.bjtu.movie.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,9 +15,9 @@ import java.util.stream.Collectors;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginUser implements UserDetails {
+public class LoginAdmin implements UserDetails {
 
-    private User user;
+    private Admin admin;
 
     //存储权限信息
     private List<String> permissions;
@@ -27,8 +26,8 @@ public class LoginUser implements UserDetails {
     @JSONField(serialize = false) //不会序列化到Redis当中
     private List<GrantedAuthority> authorities;
 
-    public LoginUser(User user,List<String> permissions) {
-        this.user = user;
+    public LoginAdmin(Admin admin,List<String> permissions) {
+        this.admin = admin;
         this.permissions = permissions;
     }
 
@@ -41,18 +40,17 @@ public class LoginUser implements UserDetails {
         authorities = permissions.stream().
                 map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
-//        System.out.println("!!!!!!authorities in LoginUser: "+authorities);
         return authorities;
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return admin.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getName();
+        return admin.getName();
     }
 
     @Override
@@ -75,4 +73,3 @@ public class LoginUser implements UserDetails {
         return true;
     }
 }
-

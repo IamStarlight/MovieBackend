@@ -1,13 +1,15 @@
 package com.bjtu.movie.controller;
 
-import com.bjtu.movie.annotation.CurrentUser;
-import com.bjtu.movie.entity.User;
+import com.bjtu.movie.controller.dto.LoginDto;
+import com.bjtu.movie.domain.User;
+import com.bjtu.movie.service.impl.AdminServiceImpl;
 import com.bjtu.movie.service.impl.UserServiceImpl;
-import com.bjtu.movie.utils.Result;
+import com.bjtu.movie.domain.Result;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,6 +17,9 @@ public class LogController {
 
     @Autowired
     private UserServiceImpl userService;
+
+    @Autowired
+    private AdminServiceImpl adminService;
 
     /**
      * 注册用户
@@ -29,21 +34,32 @@ public class LogController {
 
     /**
      * 登录用户
-     * @param user
+     * @param dto
      * @return
      */
     @GetMapping("/login")
-    public ResponseEntity<Result> login(@RequestBody @Valid User user){
-        return new ResponseEntity<>(Result.success(userService.login(user)), HttpStatus.OK);
+    public ResponseEntity<Result> login(@RequestBody @Valid LoginDto dto){
+        return new ResponseEntity<>(Result.success(userService.login(dto)), HttpStatus.OK);
     }
 
     /**
-     * 登出用户
+     * 登录管理员
+     * @param dto
+     * @return
+     */
+    @GetMapping("/login/admin")
+    public ResponseEntity<Result> loginAdmin(@RequestBody @Valid LoginDto dto){
+        return new ResponseEntity<>(Result.success(adminService.loginAdmin(dto)), HttpStatus.OK);
+    }
+
+    /**
+     * 登出用户、管理员
      * @return
      */
     @GetMapping("/logout")
-    public ResponseEntity<Result> logout(){
-        userService.logout();
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
+    public ResponseEntity<Result> logout(@RequestParam String id){
+        userService.logout(id);
         return new ResponseEntity<>(Result.success(), HttpStatus.OK);
     }
 }

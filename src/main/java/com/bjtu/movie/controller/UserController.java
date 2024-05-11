@@ -1,11 +1,9 @@
 package com.bjtu.movie.controller;
 
 
-import com.bjtu.movie.annotation.CurrentUser;
-import com.bjtu.movie.entity.User;
+import com.bjtu.movie.domain.User;
 import com.bjtu.movie.service.impl.UserServiceImpl;
-import com.bjtu.movie.utils.Result;
-import jakarta.validation.Valid;
+import com.bjtu.movie.domain.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,26 +26,28 @@ public class UserController {
     private UserServiceImpl userService;
 
     /**
-     * 重置自己的密码
-     * @param user
+     * 重置用户密码
+     * @param id
      * @param password
      * @return
      */
-    @PutMapping("/security")
-    public ResponseEntity<Result> updateUserPassword(@CurrentUser User user,@RequestParam String password){
-        userService.resetPassword(user.getId(),password);
+    @PutMapping("/security/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
+    public ResponseEntity<Result> updateUserPassword(@PathVariable String id,@RequestParam String password){
+        userService.resetPassword(id,password);
         return new ResponseEntity<>((Result.success()),HttpStatus.OK);
     }
 
     /**
-     * 重置自己的信息（不包括密码）
-     * @param user
+     * 重置用户信息（不包括密码）
+     * @param id
      * @param info
      * @return
      */
-    @PutMapping
-    public ResponseEntity<Result> updateUserInfo(@CurrentUser User user, @RequestBody User info){
-        userService.resetInfo(user.getId(),info);
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
+    public ResponseEntity<Result> updateUserInfo(@PathVariable String id, @RequestBody User info){
+        userService.resetInfo(id,info);
         return new ResponseEntity<>((Result.success()),HttpStatus.OK);
     }
 
@@ -56,7 +56,7 @@ public class UserController {
      * @return
      */
     @GetMapping
-    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
     public ResponseEntity<Result> getAllUser(){
         return new ResponseEntity<>(Result.success(userService.getAllUser()), HttpStatus.OK);
     }
