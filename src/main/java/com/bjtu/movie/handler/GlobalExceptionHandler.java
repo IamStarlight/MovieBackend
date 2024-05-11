@@ -1,5 +1,6 @@
-package com.bjtu.movie.exception;
+package com.bjtu.movie.handler;
 
+import com.bjtu.movie.exception.ServiceException;
 import com.bjtu.movie.utils.Result;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.data.redis.RedisConnectionFailureException;
@@ -92,10 +93,10 @@ public class GlobalExceptionHandler {
      * @param e
      * @return
      */
-    @ExceptionHandler({RedisConnectionFailureException.class})
-    @ResponseBody
-    public ResponseEntity<Result> handleConnectionException(RedisConnectionFailureException e) {
-        return ResponseEntity.internalServerError().body(Result.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()));
-    }
+//    @ExceptionHandler({RedisConnectionFailureException.class})
+//    @ResponseBody
+//    public ResponseEntity<Result> handleConnectionException(RedisConnectionFailureException e) {
+//        return ResponseEntity.internalServerError().body(Result.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()));
+//    }
 }
 

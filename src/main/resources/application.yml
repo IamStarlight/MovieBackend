@@ -5,13 +5,13 @@ spring:
   application:
     name: movie
 
-    data:
-      redis:
-        host: 127.0.0.1
-        port: 6379
-        password: 123456
-        database: 0
-        timeout: 5000
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: "12345"
+      database: 0
+      timeout: 5000
 
   datasource:
     name: 'movie'
@@ -27,10 +27,10 @@ spring:
   main:
     allow-circular-references: true
 
-
-#logging:
-#  level:
-#    com.fishpro.log: debug
+  # Logger Config
+  logging:
+    level:
+      com.hexadecimal: debug
 
 mybatis-plus:
   type-aliases-package: com.bjtu.entity

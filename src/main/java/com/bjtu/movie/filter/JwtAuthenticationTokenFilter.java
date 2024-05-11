@@ -20,6 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Objects;
 
+
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
@@ -27,7 +28,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private RedisCache redisCache;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         //获取token
         String token = request.getHeader("Token");
         if (!StringUtils.hasText(token)) {
@@ -43,17 +44,14 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             userid = claims.getSubject();
         } catch (Exception e) {
             e.printStackTrace();
-//            throw new RuntimeException("token非法");
             throw new ServiceException(HttpStatus.UNAUTHORIZED.value(),"token非法");
         }
         //从redis中获取用户信息
         String redisKey = "login:" + userid;
         LoginUser loginUser = redisCache.getCacheObject(redisKey);
         if(Objects.isNull(loginUser)){
-//            throw new RuntimeException("用户未登录");
             throw new ServiceException(HttpStatus.FORBIDDEN.value(),"用户未登录");
         }
-//        System.out.println("!!!!!!jwtAuthFilter LoginUser: "+loginUser.getUser());
         //存入SecurityContextHolder
         //获取权限信息封装到Authentication中
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -67,3 +65,4 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
+

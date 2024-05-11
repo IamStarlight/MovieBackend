@@ -82,7 +82,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
-			<version>2.5.9</version>
 		</dependency>
 		<!--session-redis-->
 		<dependency>
@@ -106,12 +105,11 @@
 			<artifactId>jjwt</artifactId>
 			<version>0.9.0</version>
 		</dependency>
-		<!-- mybaits-plus 代码生成器 -->
-		<!--		<dependency>-->
-		<!--			<groupId>com.baomidou</groupId>-->
-		<!--			<artifactId>mybatis-plus-generator</artifactId>-->
-		<!--			<version>3.5.2</version>-->
-		<!--		</dependency>-->
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.1</version>
+		</dependency>
 		<!-- Velocity引擎模板 -->
 		<dependency>
 			<groupId>org.apache.velocity</groupId>
@@ -153,13 +151,13 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<testFailureIgnore>true</testFailureIgnore>
-				</configuration>
-			</plugin>
+<!--			<plugin>-->
+<!--				<groupId>org.apache.maven.plugins</groupId>-->
+<!--				<artifactId>maven-surefire-plugin</artifactId>-->
+<!--				<configuration>-->
+<!--					<testFailureIgnore>true</testFailureIgnore>-->
+<!--				</configuration>-->
+<!--			</plugin>-->
 		</plugins>
 	</build>
 
