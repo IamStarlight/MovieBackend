@@ -1,8 +1,10 @@
 package com.bjtu.movie.service;
 
+import com.bjtu.movie.controller.dto.LoginDto;
 import com.bjtu.movie.domain.Admin;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -32,4 +34,8 @@ public interface IAdminService extends IService<Admin> {
     Admin getByName(String name);
 
     void adminRegister(Admin newAdmin);
+
+    HashMap<String,String> loginAdmin(LoginDto dto);
+
+    void logout(String id);
 }

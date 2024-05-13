@@ -1,15 +1,21 @@
 package com.bjtu.movie.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.bjtu.movie.domain.Admin;
+import com.bjtu.movie.domain.LoginAdmin;
 import com.bjtu.movie.domain.User;
 import com.bjtu.movie.exception.ServiceException;
+import com.bjtu.movie.mapper.AdminMapper;
 import com.bjtu.movie.mapper.UserMapper;
 import com.bjtu.movie.domain.LoginUser;
+import com.bjtu.movie.utils.RegexUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsPasswordService;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,45 +23,51 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.List;
 
+//,UserDetailsPasswordService
 @Service
-public class UserDetailsServiceImpl extends ServiceImpl<UserMapper, User> implements UserDetailsService,UserDetailsPasswordService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private UserServiceImpl userService;
+    private UserMapper userMapper;
+
+    @Autowired
+    private  AdminMapper adminMapper;
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String name) {
-        User user = userService.getByName(name);
-        //如果查询不到数据就通过抛出异常来给出提示
-        if(user == null){
-            throw new ServiceException(HttpStatus.NOT_FOUND.value(),"用户不存在");
+    public UserDetails loadUserByUsername(String userNameRole) {
+        String name = RegexUtil.parseUserName(userNameRole);
+        if(RegexUtil.matchUser(userNameRole)) {
+            LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(User::getName,name);
+            User user = userMapper.selectOne(wrapper);
+            //如果查询不到数据就通过抛出异常来给出提示
+            if (user == null) {
+//            throw new ServiceException(HttpStatus.NOT_FOUND.value(),"用户不存在");
+                throw new UsernameNotFoundException("用户不存在");
+            }
+            //根据用户查询权限信息 添加到LoginUser中
+            List<String> permissionKeyList =
+                    Collections.singletonList(user.getPermission());
+            //封装成UserDetails对象返回
+            return new LoginUser(user, permissionKeyList);
+        }else if(RegexUtil.matchAdmin(userNameRole)){
+            LambdaQueryWrapper<Admin> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(Admin::getName,name);
+            Admin admin = adminMapper.selectOne(wrapper);
+            //如果查询不到数据就通过抛出异常来给出提示
+            if (admin == null) {
+                throw new UsernameNotFoundException("用户不存在");
+            }
+            //根据用户查询权限信息 添加到LoginUser中
+            List<String> permissionKeyList =
+                    Collections.singletonList(admin.getPermission());
+
+            //封装成UserDetails对象返回
+            return new LoginAdmin(admin, permissionKeyList);
+        }else{
+            throw new ServiceException(HttpStatus.FORBIDDEN.value(), "后缀错误");
         }
-        //根据用户查询权限信息 添加到LoginUser中
-        List<String> permissionKeyList =
-                Collections.singletonList(user.getPermission());
-        //String.valueOf(userService.getPermission(user.getId()))
-
-        //封装成UserDetails对象返回
-        return new LoginUser(user,permissionKeyList);
-    }
-
-    @Override
-    public UserDetails updatePassword(UserDetails user, String newPassword) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        //对用户密码进行加密
-        String encodePassword = passwordEncoder.encode(newPassword);
-
-        //更新用户密码
-        User nowUser = userService.getById(user.getUsername());
-        nowUser.setPassword(encodePassword);
-        userService.updateById(nowUser);
-
-        List<String> permissionKeyList =
-                Collections.singletonList(nowUser.getPermission());
-        //String.valueOf(userService.getPermission(nowUser.getId()))
-
-        return new LoginUser(nowUser,permissionKeyList);
     }
 }
 

@@ -1,10 +1,13 @@
 package com.bjtu.movie.filter;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bjtu.movie.constants.Role;
+import com.bjtu.movie.domain.LoginAdmin;
 import com.bjtu.movie.exception.ServiceException;
 import com.bjtu.movie.utils.JwtUtil;
 import com.bjtu.movie.domain.LoginUser;
 import com.bjtu.movie.utils.RedisCache;
+import com.bjtu.movie.utils.RegexUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,7 +23,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Objects;
-
+import java.util.regex.Pattern;
 
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
@@ -39,29 +42,47 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         }
 
         //解析token
-        String userid;
+        String userNameRole;
         try {
             Claims claims = JwtUtil.parseJWT(token);
-            userid = claims.getSubject();
+            userNameRole = claims.getSubject();
         } catch (Exception e) {
             e.printStackTrace();
             throw new ServiceException(HttpStatus.UNAUTHORIZED.value(),"Token非法");
         }
-        //从redis中获取用户信息
-        String redisKey = "login:" + userid;
-        JSONObject jsonObject = redisCache.getCacheObject(redisKey);
-        LoginUser loginUser = jsonObject.toJavaObject(LoginUser.class);
-        if(Objects.isNull(loginUser)){
-            throw new ServiceException(HttpStatus.NOT_FOUND.value(),"用户未登录");
-        }
-        //存入SecurityContextHolder
-        //获取权限信息封装到Authentication中
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(
-                        loginUser,null,loginUser.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-        request.setAttribute("CurrentUser",loginUser.getUser());
+        String userName = RegexUtil.parseUserName(userNameRole);
+
+        //从redis中获取用户信息
+        if(RegexUtil.matchUser(userNameRole)) {
+            String redisKey = "user login:" + userName;
+            JSONObject jsonObject = redisCache.getCacheObject(redisKey);
+            LoginUser loginUser = jsonObject.toJavaObject(LoginUser.class);
+            if (Objects.isNull(loginUser)) {
+                throw new ServiceException(HttpStatus.NOT_FOUND.value(), "用户未登录");
+            }
+            //存入SecurityContextHolder
+            //获取权限信息封装到Authentication中
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(
+                            loginUser, null, loginUser.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        }else{
+            String redisKey = "admin login:" + userName;
+            JSONObject jsonObject = redisCache.getCacheObject(redisKey);
+            LoginAdmin loginAdmin = jsonObject.toJavaObject(LoginAdmin.class);
+            if (Objects.isNull(loginAdmin)) {
+                throw new ServiceException(HttpStatus.NOT_FOUND.value(), "用户未登录");
+            }
+            //存入SecurityContextHolder
+            //获取权限信息封装到Authentication中
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(
+                            loginAdmin, null, loginAdmin.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        }
+
+//        request.setAttribute("CurrentUser",loginUser.getUser());
 
         //放行
         filterChain.doFilter(request, response);

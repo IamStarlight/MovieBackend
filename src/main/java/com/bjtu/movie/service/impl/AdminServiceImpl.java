@@ -6,8 +6,6 @@ import com.bjtu.movie.controller.dto.LoginDto;
 import com.bjtu.movie.domain.Admin;
 import com.bjtu.movie.constants.Role;
 import com.bjtu.movie.domain.LoginAdmin;
-import com.bjtu.movie.domain.LoginUser;
-import com.bjtu.movie.domain.User;
 import com.bjtu.movie.exception.ServiceException;
 import com.bjtu.movie.mapper.AdminMapper;
 import com.bjtu.movie.service.IAdminService;
@@ -38,11 +36,11 @@ import java.util.Objects;
 @Service
 public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements IAdminService {
 
-//    @Autowired
-//    private RedisCache redisCache;
-//
-//    @Autowired
-//    private AuthenticationManager authenticationManager;
+    @Autowired
+    private RedisCache redisCache;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @Override
     public void initSuperAdmin() {
@@ -140,33 +138,38 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         save(newAdmin);
     }
 
+    @Override
     public HashMap<String,String> loginAdmin(LoginDto dto) {
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(dto.getName()+Role.ROLE_ADMIN.getValue(), dto.getPassword());
 
-//        UsernamePasswordAuthenticationToken authenticationToken =
-//                new UsernamePasswordAuthenticationToken(dto.getName(), dto.getPassword());
-//
-//        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-//
-//        if(Objects.isNull(authenticate)) {
-//            throw new ServiceException(HttpStatus.UNAUTHORIZED.value(), "用户名或密码错误");
-//        }
-//
-//        //使用userid生成token
-//        LoginAdmin loginAdmin = (LoginAdmin) authenticate.getPrincipal();
-//        String userId = loginAdmin.getAdmin().getId();
-//        String jwt = JwtUtil.createJWT(userId);
-//
-//        //authenticate存入redis
-//        redisCache.setCacheObject("login:"+userId,loginAdmin);
-//
-//        //把token响应给前端
+        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+
+        if(Objects.isNull(authenticate)) {
+            throw new ServiceException(HttpStatus.UNAUTHORIZED.value(), "用户名或密码错误");
+        }
+
+        //使用userid生成token
+        LoginAdmin loginAdmin = (LoginAdmin) authenticate.getPrincipal();
+        String adminName = loginAdmin.getAdmin().getName();
+        String jwt = JwtUtil.createJWT(adminName,Role.ROLE_ADMIN.getValue());
+
+        //authenticate存入redis
+        redisCache.setCacheObject("admin login:"+adminName,loginAdmin);
+
+        //把token响应给前端
         HashMap<String,String> map = new HashMap<>();
-//        Admin nowAdmin = loginAdmin.getAdmin();
-//        map.put("token",jwt);
-//        map.put("permission",nowAdmin.getPermission());
-//        map.put("name", nowAdmin.getName());
-//        map.put("id", nowAdmin.getId());
-//
+        Admin nowAdmin = loginAdmin.getAdmin();
+        map.put("token",jwt);
+        map.put("permission",nowAdmin.getPermission());
+        map.put("name", nowAdmin.getName());
+        map.put("id", nowAdmin.getId());
+
         return map;
+    }
+
+    @Override
+    public void logout(String id) {
+        redisCache.deleteObject("admin login:" + id);
     }
 }

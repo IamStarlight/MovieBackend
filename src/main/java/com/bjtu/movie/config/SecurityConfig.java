@@ -1,25 +1,20 @@
 package com.bjtu.movie.config;
 
+import com.bjtu.movie.constants.Role;
 import com.bjtu.movie.filter.JwtAuthenticationTokenFilter;
 import com.bjtu.movie.handler.AuthenticationHandler;
-import com.bjtu.movie.service.impl.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity //注解代替继承
@@ -31,11 +26,29 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+//    @Bean
+//    @Primary
+//    UserDetailsService u1(){
+//        return new UserDetailsServiceImpl();
+//    }
+//
+//    @Bean
+//    UserDetailsService u2(){
+//        return new AdminDetailsServiceImpl();
+//    }
     /**
      * 获取AuthenticationManager（认证管理器），登录时认证使用
      */
     @Bean
+    //AuthenticationConfiguration authenticationConfiguration
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+//        DaoAuthenticationProvider provider1 = new DaoAuthenticationProvider();
+//        provider1.setUserDetailsService(u1());
+//
+//        DaoAuthenticationProvider provider2 = new DaoAuthenticationProvider();
+//        provider2.setUserDetailsService(u2());
+//
+//        return new ProviderManager(provider1,provider2);
         return authenticationConfiguration.getAuthenticationManager();
     }
 
@@ -46,7 +59,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         //对于登录接口 允许匿名访问
-                        .requestMatchers("/login","/signup").permitAll()
+                        .requestMatchers("/login","/signup","/admin/login").permitAll()
                         //除上面外的所有请求全部需要鉴权认证
                         .anyRequest().authenticated())
 

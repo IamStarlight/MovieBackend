@@ -42,6 +42,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+
     @Override
     public String getPermission(String id){
         return getById(id).getPermission();
@@ -64,13 +67,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
 //        String userid = String.valueOf(loginUser.getUser().getId());
-        redisCache.deleteObject("login:" + id);
+        redisCache.deleteObject("user login:" + id);
     }
 
     @Override
     public HashMap<String,String> login(LoginDto dto) {
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(dto.getName(), dto.getPassword());
+                new UsernamePasswordAuthenticationToken(dto.getName()+Role.ROLE_USER.getValue(), dto.getPassword());
 
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
 
@@ -80,11 +83,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         //使用userid生成token
         LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
-        String userId = loginUser.getUser().getId();
-        String jwt = JwtUtil.createJWT(userId);
+        String userName = loginUser.getUser().getName();
+        String jwt = JwtUtil.createJWT(userName,Role.ROLE_USER.getValue());
 
         //authenticate存入redis
-        redisCache.setCacheObject("login:"+userId,loginUser);
+        redisCache.setCacheObject("user login:"+userName,loginUser);
 
         //把token响应给前端
         HashMap<String,String> map = new HashMap<>();

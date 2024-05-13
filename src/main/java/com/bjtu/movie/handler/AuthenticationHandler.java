@@ -21,7 +21,7 @@ public class AuthenticationHandler implements AccessDeniedHandler, Authenticatio
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) {
-        String json = JSON.toJSONString(Result.error(HttpStatus.UNAUTHORIZED.value(),"身份验证失败"));
+        String json = JSON.toJSONString(Result.error(HttpStatus.UNAUTHORIZED.value(),"账号或密码错误"));
         WebUtils.renderString(response,json);
     }
 

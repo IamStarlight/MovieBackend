@@ -47,19 +47,30 @@ public class LogController {
      * @param dto
      * @return
      */
-//    @GetMapping("/login/admin")
-//    public ResponseEntity<Result> loginAdmin(@RequestBody @Valid LoginDto dto){
-//        return new ResponseEntity<>(Result.success(adminService.loginAdmin(dto)), HttpStatus.OK);
-//    }
+    @PostMapping("/admin/login")
+    public ResponseEntity<Result> loginAdmin(@RequestBody @Valid LoginDto dto){
+        return new ResponseEntity<>(Result.success(adminService.loginAdmin(dto)), HttpStatus.OK);
+    }
 
     /**
-     * 登出用户、管理员
+     * 登出用户
      * @return
      */
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
     public ResponseEntity<Result> logout(@RequestParam String id){
         userService.logout(id);
+        return new ResponseEntity<>(Result.success(), HttpStatus.OK);
+    }
+
+    /**
+     * 登出管理员
+     * @return
+     */
+    @PostMapping("/admin/logout")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
+    public ResponseEntity<Result> logoutAdmin(@RequestParam String id){
+        adminService.logout(id);
         return new ResponseEntity<>(Result.success(), HttpStatus.OK);
     }
 }

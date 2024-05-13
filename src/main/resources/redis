@@ -3,5 +3,5 @@ cd /d D:\Program Files\Redis
 redis-server.exe redis.windows.conf
 
 redis-cli.exe
-auth 12345
+auth 123456
 shutdown
