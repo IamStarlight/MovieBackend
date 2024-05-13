@@ -9,23 +9,23 @@ spring:
     redis:
       host: 127.0.0.1
       port: 6379
-#      password: "12345"
+      password: "12345"
       database: 0
       timeout: 5000
 
-  datasource:
-    name: 'movie'
-    url: jdbc:mysql://59.110.112.31:3306/movie?serverTimezone=GMT
-    username: 'root'
-    password: 'root'
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
 #  datasource:
 #    name: 'movie'
-#    url: jdbc:mysql://localhost:3306/movie?serverTimezone=GMT
+#    url: jdbc:mysql://59.110.112.31:3306/movie?serverTimezone=GMT
 #    username: 'root'
 #    password: 'root'
 #    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  datasource:
+    name: 'movie'
+    url: jdbc:mysql://localhost:3306/movie?serverTimezone=GMT
+    username: 'root'
+    password: 'root'
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jackson:
     date-format: yyyy-MM-dd HH:mm

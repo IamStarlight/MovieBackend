@@ -33,8 +33,8 @@ public class AdminDetailsServiceImpl extends ServiceImpl<AdminMapper, Admin> imp
         }
         //根据用户查询权限信息 添加到LoginUser中
         List<String> permissionKeyList =
-                Collections.singletonList(
-                        String.valueOf(adminService.getPermission(admin.getId())));
+                Collections.singletonList(admin.getPermission());
+        //adminService.getPermission(admin.getId())
 
         //封装成UserDetails对象返回
         return new LoginAdmin(admin,permissionKeyList);
@@ -52,8 +52,8 @@ public class AdminDetailsServiceImpl extends ServiceImpl<AdminMapper, Admin> imp
         adminService.updateById(nowUser);
 
         List<String> permissionKeyList =
-                Collections.singletonList(
-                        String.valueOf(adminService.getPermission(nowUser.getId())));
+                Collections.singletonList(nowUser.getPermission());
+        //String.valueOf(adminService.getPermission(nowUser.getId()))
 
         return new LoginAdmin(nowUser,permissionKeyList);
     }

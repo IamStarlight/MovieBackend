@@ -1,6 +1,7 @@
 package com.bjtu.movie.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.bjtu.movie.controller.dto.LoginDto;
 import com.bjtu.movie.domain.User;
 import com.bjtu.movie.constants.Role;
@@ -48,11 +49,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public void register(User newUser) {
-        if(getByName(newUser.getName()) != null)
+        if(getByName(newUser.getName()) != null) {
             throw new ServiceException(HttpStatus.FORBIDDEN.value(), "用户名已存在");
+        }
         newUser.setPassword(encodePassword(newUser.getPassword()));
         newUser.setCreatedAt(DateTimeUtil.getNowTimeString());
         newUser.setPermission(Role.ROLE_USER.getValue());
+        newUser.setDeleted(false);
         save(newUser);
     }
 
@@ -97,7 +100,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public User getByName(String name) {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(User::getName,name);
+        wrapper.eq(User::getName,name)
+                .eq(User::isDeleted,false);
         return getOne(wrapper);
     }
 
@@ -117,8 +121,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public void resetInfo(String id, User info) {
-        User user = getById(id);
-        if(user == null){
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getId,id)
+                .eq(User::isDeleted,false);
+        if(getOne(wrapper) == null){
             throw new ServiceException(HttpStatus.NOT_FOUND.value(),"用户不存在");
         }
         info.setId(id);
@@ -128,21 +134,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public List<User> getAllUser() {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(User::getPermission,Role.ROLE_USER.getValue());
+        wrapper.eq(User::getPermission,Role.ROLE_USER.getValue())
+                .eq(User::isDeleted,false);
         return listObjs(wrapper);
     }
 
     @Override
     public User getOneUser(String id) {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(User::getPermission,Role.ROLE_USER.getValue());
+        wrapper.eq(User::getPermission,Role.ROLE_USER.getValue())
+                .eq(User::isDeleted,false);
         return getOne(wrapper);
     }
 
     @Override
     public void deleteOneUser(String id) {
-        if(getById(id) == null)
+        if(getOneUser(id) == null) {
             throw new ServiceException(HttpStatus.NOT_FOUND.value(), "用户不存在");
-        removeById(id);
+        }
+        LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(User::getId,id)
+                .set(User::isDeleted,true);
+        update(wrapper);
     }
 }

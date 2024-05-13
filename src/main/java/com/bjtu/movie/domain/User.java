@@ -43,4 +43,6 @@ public class User implements Serializable {
     @ApiModelProperty(value = "创建时间")
     private String createdAt;
 
+    @ApiModelProperty(value = "是否删除")
+    private boolean deleted;
 }

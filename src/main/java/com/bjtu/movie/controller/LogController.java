@@ -37,7 +37,7 @@ public class LogController {
      * @param dto
      * @return
      */
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<Result> login(@RequestBody @Valid LoginDto dto){
         return new ResponseEntity<>(Result.success(userService.login(dto)), HttpStatus.OK);
     }
@@ -47,10 +47,10 @@ public class LogController {
      * @param dto
      * @return
      */
-    @GetMapping("/login/admin")
-    public ResponseEntity<Result> loginAdmin(@RequestBody @Valid LoginDto dto){
-        return new ResponseEntity<>(Result.success(adminService.loginAdmin(dto)), HttpStatus.OK);
-    }
+//    @GetMapping("/login/admin")
+//    public ResponseEntity<Result> loginAdmin(@RequestBody @Valid LoginDto dto){
+//        return new ResponseEntity<>(Result.success(adminService.loginAdmin(dto)), HttpStatus.OK);
+//    }
 
     /**
      * 登出用户、管理员

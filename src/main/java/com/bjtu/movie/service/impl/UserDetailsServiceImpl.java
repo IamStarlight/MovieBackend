@@ -26,7 +26,6 @@ public class UserDetailsServiceImpl extends ServiceImpl<UserMapper, User> implem
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String name) {
-//        User user = getById(id);
         User user = userService.getByName(name);
         //如果查询不到数据就通过抛出异常来给出提示
         if(user == null){
@@ -34,8 +33,8 @@ public class UserDetailsServiceImpl extends ServiceImpl<UserMapper, User> implem
         }
         //根据用户查询权限信息 添加到LoginUser中
         List<String> permissionKeyList =
-                Collections.singletonList(
-                        String.valueOf(userService.getPermission(user.getId())));
+                Collections.singletonList(user.getPermission());
+        //String.valueOf(userService.getPermission(user.getId()))
 
         //封装成UserDetails对象返回
         return new LoginUser(user,permissionKeyList);
@@ -53,8 +52,8 @@ public class UserDetailsServiceImpl extends ServiceImpl<UserMapper, User> implem
         userService.updateById(nowUser);
 
         List<String> permissionKeyList =
-                Collections.singletonList(
-                        String.valueOf(userService.getPermission(nowUser.getId())));
+                Collections.singletonList(nowUser.getPermission());
+        //String.valueOf(userService.getPermission(nowUser.getId()))
 
         return new LoginUser(nowUser,permissionKeyList);
     }

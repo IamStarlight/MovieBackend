@@ -32,6 +32,4 @@ public interface IAdminService extends IService<Admin> {
     Admin getByName(String name);
 
     void adminRegister(Admin newAdmin);
-
-    String getPermission(String id);
 }
