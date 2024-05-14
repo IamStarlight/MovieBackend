@@ -6,7 +6,6 @@ import com.bjtu.movie.controller.dto.LoginDto;
 import com.bjtu.movie.domain.Admin;
 import com.bjtu.movie.constants.Role;
 import com.bjtu.movie.domain.LoginAdmin;
-import com.bjtu.movie.domain.LoginUser;
 import com.bjtu.movie.exception.ServiceException;
 import com.bjtu.movie.mapper.AdminMapper;
 import com.bjtu.movie.service.IAdminService;
@@ -25,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -43,6 +43,9 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private AdminMapper adminMapper;
 
     @Override
     public void initSuperAdmin() {
@@ -72,20 +75,22 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     }
 
     @Override
-    public List<Admin> getAllAdmin() {
+    public List<Map<String, Object>> getAllAdmin() {
         LambdaQueryWrapper<Admin> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Admin::getPermission, Role.ROLE_ADMIN.getValue())
-                .eq(Admin::isDeleted,false);
-        return listObjs(wrapper);
+                .eq(Admin::isDeleted,false)
+                .select(Admin::getId,Admin::getName);
+        return adminMapper.selectMaps(wrapper);
     }
 
     @Override
-    public Admin getOneAdmin(Integer id) {
+    public Map<String, Object> getOneAdmin(Integer id) {
         LambdaQueryWrapper<Admin> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Admin::getPermission, Role.ROLE_ADMIN.getValue())
                 .eq(Admin::getId,id)
-                .eq(Admin::isDeleted,false);
-        return getOne(wrapper);
+                .eq(Admin::isDeleted,false)
+                .select(Admin::getId,Admin::getName);
+        return adminMapper.selectMaps(wrapper).get(0);
     }
 
     @Override
@@ -135,7 +140,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         }
         newAdmin.setPassword(encodePassword(newAdmin.getPassword()));
         newAdmin.setCreatedAt(DateTimeUtil.getNowTimeString());
-        newAdmin.setPermission(Role.ROLE_USER.getValue());
+        newAdmin.setPermission(Role.ROLE_ADMIN.getValue());
         newAdmin.setDeleted(false);
         save(newAdmin);
     }

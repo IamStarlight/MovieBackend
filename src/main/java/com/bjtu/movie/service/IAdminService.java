@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -21,9 +22,9 @@ public interface IAdminService extends IService<Admin> {
 
     boolean hasSuperAdmin();
 
-    List<Admin> getAllAdmin();
+    List<Map<String, Object>> getAllAdmin();
 
-    Admin getOneAdmin(Integer id);
+    Map<String, Object> getOneAdmin(Integer id);
 
     void deleteOneAdmin(Integer id);
 
