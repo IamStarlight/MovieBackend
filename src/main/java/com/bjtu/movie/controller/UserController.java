@@ -33,7 +33,7 @@ public class UserController {
      */
     @PutMapping("/security/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
-    public ResponseEntity<Result> updateUserPassword(@PathVariable String id,@RequestParam String password){
+    public ResponseEntity<Result> updateUserPassword(@PathVariable Integer id,@RequestParam String password){
         userService.resetPassword(id,password);
         return new ResponseEntity<>((Result.success()),HttpStatus.OK);
     }
@@ -46,7 +46,7 @@ public class UserController {
      */
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
-    public ResponseEntity<Result> updateUserInfo(@PathVariable String id, @RequestBody User info){
+    public ResponseEntity<Result> updateUserInfo(@PathVariable Integer id, @RequestBody User info){
         userService.resetInfo(id,info);
         return new ResponseEntity<>((Result.success()),HttpStatus.OK);
     }
@@ -68,7 +68,7 @@ public class UserController {
      */
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
-    public ResponseEntity<Result> getOneUser(@PathVariable String id){
+    public ResponseEntity<Result> getOneUser(@PathVariable Integer id){
         return new ResponseEntity<>(Result.success(userService.getOneUser(id)), HttpStatus.OK);
     }
 
@@ -79,7 +79,7 @@ public class UserController {
      */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
-    public ResponseEntity<Result> deleteOneUser(@PathVariable String id) {
+    public ResponseEntity<Result> deleteOneUser(@PathVariable Integer id) {
         userService.deleteOneUser(id);
         return new ResponseEntity<>(Result.success(), HttpStatus.OK);
     }

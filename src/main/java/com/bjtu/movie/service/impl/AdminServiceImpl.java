@@ -80,7 +80,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     }
 
     @Override
-    public Admin getOneAdmin(String id) {
+    public Admin getOneAdmin(Integer id) {
         LambdaQueryWrapper<Admin> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Admin::getPermission, Role.ROLE_ADMIN.getValue())
                 .eq(Admin::getId,id)
@@ -89,7 +89,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     }
 
     @Override
-    public void deleteOneAdmin(String id) {
+    public void deleteOneAdmin(Integer id) {
         if(getOneAdmin(id) == null) {
             throw new ServiceException(HttpStatus.NOT_FOUND.value(), "管理员不存在");
         }
@@ -100,7 +100,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     }
 
     @Override
-    public void resetPassword(String id, String password) {
+    public void resetPassword(Integer id, String password) {
         //todo：验证
         if(getOneAdmin(id) == null) {
             throw new ServiceException(HttpStatus.NOT_FOUND.value(), "管理员不存在");
@@ -112,7 +112,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     }
 
     @Override
-    public void resetInfo(String id, Admin info) {
+    public void resetInfo(Integer id, Admin info) {
         if(getOneAdmin(id) == null) {
             throw new ServiceException(HttpStatus.NOT_FOUND.value(), "管理员不存在");
         }
@@ -165,7 +165,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         map.put("token",jwt);
         map.put("permission",nowAdmin.getPermission());
         map.put("name", nowAdmin.getName());
-        map.put("id", nowAdmin.getId());
+        map.put("id", nowAdmin.getId().toString());
 
         return map;
     }

@@ -6,6 +6,7 @@ import com.bjtu.movie.domain.User;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -17,7 +18,7 @@ import java.util.List;
  */
 public interface IUserService extends IService<User> {
 
-    String getPermission(String id);
+    String getPermission(Integer id);
 
     void register(User newUser);
 
@@ -27,13 +28,13 @@ public interface IUserService extends IService<User> {
 
     User getByName(String name);
 
-    void resetPassword(String id, String password);
+    void resetPassword(Integer id, String password);
 
-    void resetInfo(String id, User info);
+    void resetInfo(Integer id, User info);
 
-    List<User> getAllUser();
+    List<Map<String, Object>> getAllUser();
 
-    User getOneUser(String id);
+    Map<String, Object> getOneUser(Integer id);
 
-    void deleteOneUser(String id);
+    void deleteOneUser(Integer id);
 }

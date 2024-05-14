@@ -49,7 +49,7 @@ public class AdminController {
      */
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN')")
-    public ResponseEntity<Result> getOneAdmin(@PathVariable String id){
+    public ResponseEntity<Result> getOneAdmin(@PathVariable Integer id){
         return new ResponseEntity<>(Result.success(adminService.getOneAdmin(id)), HttpStatus.OK);
     }
 
@@ -61,7 +61,7 @@ public class AdminController {
      */
     @PutMapping("/security/{id}")
     @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
-    public ResponseEntity<Result> resetPassword(@PathVariable String id, @RequestParam String password) {
+    public ResponseEntity<Result> resetPassword(@PathVariable Integer id, @RequestParam String password) {
         adminService.resetPassword(id,password);
         return new ResponseEntity<>(Result.success(), HttpStatus.OK);
     }
@@ -86,7 +86,7 @@ public class AdminController {
      */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN')")
-    public ResponseEntity<Result> deleteOneAdmin(@PathVariable String id) {
+    public ResponseEntity<Result> deleteOneAdmin(@PathVariable Integer id) {
         adminService.deleteOneAdmin(id);
         return new ResponseEntity<>(Result.success(), HttpStatus.OK);
     }

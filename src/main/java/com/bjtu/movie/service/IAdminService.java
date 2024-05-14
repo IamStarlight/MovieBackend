@@ -23,13 +23,13 @@ public interface IAdminService extends IService<Admin> {
 
     List<Admin> getAllAdmin();
 
-    Admin getOneAdmin(String id);
+    Admin getOneAdmin(Integer id);
 
-    void deleteOneAdmin(String id);
+    void deleteOneAdmin(Integer id);
 
-    void resetPassword(String id, String password);
+    void resetPassword(Integer id, String password);
 
-    void resetInfo(String id, Admin info);
+    void resetInfo(Integer id, Admin info);
 
     Admin getByName(String name);
 

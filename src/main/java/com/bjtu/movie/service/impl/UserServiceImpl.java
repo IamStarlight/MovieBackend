@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -44,10 +45,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    private UserMapper userMapper;
 
     @Override
-    public String getPermission(String id){
+    public String getPermission(Integer id){
         return getById(id).getPermission();
     }
 
@@ -96,7 +97,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         map.put("token",jwt);
         map.put("permission",nowUser.getPermission());
         map.put("name", nowUser.getName());
-        map.put("id", nowUser.getId());
+        map.put("id", nowUser.getId().toString());
 
         return map;
     }
@@ -115,7 +116,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public void resetPassword(String id, String password) {
+    public void resetPassword(Integer id, String password) {
         //todo：验证
         User user = new User();
         user.setId(id);
@@ -124,7 +125,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public void resetInfo(String id, User info) {
+    public void resetInfo(Integer id, User info) {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(User::getId,id)
                 .eq(User::isDeleted,false);
@@ -136,23 +137,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public List<User> getAllUser() {
+    public List<Map<String, Object>> getAllUser() {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(User::getPermission,Role.ROLE_USER.getValue())
-                .eq(User::isDeleted,false);
-        return listObjs(wrapper);
+        wrapper.eq(User::isDeleted,false)
+                .select(User::getId,User::getName);
+        return userMapper.selectMaps(wrapper);
     }
 
     @Override
-    public User getOneUser(String id) {
+    public Map<String, Object> getOneUser(Integer id) {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(User::getPermission,Role.ROLE_USER.getValue())
-                .eq(User::isDeleted,false);
-        return getOne(wrapper);
+        wrapper.eq(User::isDeleted,false)
+                .eq(User::getId,id)
+                .select(User::getId,User::getName);
+        return userMapper.selectMaps(wrapper).get(0);
     }
 
     @Override
-    public void deleteOneUser(String id) {
+    public void deleteOneUser(Integer id) {
         if(getOneUser(id) == null) {
             throw new ServiceException(HttpStatus.NOT_FOUND.value(), "用户不存在");
         }

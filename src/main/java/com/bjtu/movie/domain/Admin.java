@@ -29,7 +29,7 @@ public class Admin implements Serializable {
 
     @ApiModelProperty(value = "管理员id")
     @TableId(value = "id", type = IdType.AUTO)
-    private String id;
+    private Integer id;
 
     @ApiModelProperty(value = "管理员名称")
     private String name;

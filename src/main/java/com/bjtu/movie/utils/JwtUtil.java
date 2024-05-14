@@ -49,12 +49,12 @@ public class JwtUtil {
 
     /**
      * 创建token
-     * @param id
+     * @param name
      * @param role
      * @return
      */
-    public static String createJWT(String id, String role) {
-        JwtBuilder builder = getJwtBuilder(id+role, null, getUUID());// 设置过期时间
+    public static String createJWT(String name, String role) {
+        JwtBuilder builder = getJwtBuilder(name+role, null, getUUID());// 设置过期时间
         return builder.compact();
     }
 
