@@ -37,5 +37,5 @@ public interface IAdminService extends IService<Admin> {
 
     HashMap<String,String> loginAdmin(LoginDto dto);
 
-    void logout(String id);
+    void logout();
 }

@@ -21,7 +21,7 @@ public interface IUserService extends IService<User> {
 
     void register(User newUser);
 
-    void logout(String id);
+    void logout();
 
     HashMap<String,String> login(LoginDto dto);
 

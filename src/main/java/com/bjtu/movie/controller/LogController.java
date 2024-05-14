@@ -56,10 +56,10 @@ public class LogController {
      * 登出用户
      * @return
      */
-    @PostMapping("/logout")
-    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
-    public ResponseEntity<Result> logout(@RequestParam String id){
-        userService.logout(id);
+    @PostMapping("/user/logout")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
+    public ResponseEntity<Result> logout(){
+        userService.logout();
         return new ResponseEntity<>(Result.success(), HttpStatus.OK);
     }
 
@@ -68,9 +68,9 @@ public class LogController {
      * @return
      */
     @PostMapping("/admin/logout")
-    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
-    public ResponseEntity<Result> logoutAdmin(@RequestParam String id){
-        adminService.logout(id);
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+    public ResponseEntity<Result> logoutAdmin(){
+        adminService.logout();
         return new ResponseEntity<>(Result.success(), HttpStatus.OK);
     }
 }

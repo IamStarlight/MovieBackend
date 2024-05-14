@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -63,11 +64,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public void logout(String id) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-//        String userid = String.valueOf(loginUser.getUser().getId());
-        redisCache.deleteObject("user login:" + id);
+    public void logout() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        String userName = loginUser.getUser().getName();
+        redisCache.deleteObject("user login:" + userName);
     }
 
     @Override

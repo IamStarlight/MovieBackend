@@ -6,6 +6,7 @@ import com.bjtu.movie.controller.dto.LoginDto;
 import com.bjtu.movie.domain.Admin;
 import com.bjtu.movie.constants.Role;
 import com.bjtu.movie.domain.LoginAdmin;
+import com.bjtu.movie.domain.LoginUser;
 import com.bjtu.movie.exception.ServiceException;
 import com.bjtu.movie.mapper.AdminMapper;
 import com.bjtu.movie.service.IAdminService;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -169,7 +171,10 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     }
 
     @Override
-    public void logout(String id) {
-        redisCache.deleteObject("admin login:" + id);
+    public void logout() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        LoginAdmin loginAdmin = (LoginAdmin) authentication.getPrincipal();
+        String adminName = loginAdmin.getAdmin().getName();
+        redisCache.deleteObject("admin login:" + adminName);
     }
 }
