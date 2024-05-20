@@ -3,15 +3,15 @@ package com.bjtu.movie.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.bjtu.movie.controller.dto.LoginDto;
-import com.bjtu.movie.domain.User;
+import com.bjtu.movie.entity.User;
 import com.bjtu.movie.constants.Role;
 import com.bjtu.movie.exception.ServiceException;
-import com.bjtu.movie.mapper.UserMapper;
+import com.bjtu.movie.dao.UserMapper;
 import com.bjtu.movie.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bjtu.movie.utils.DateTimeUtil;
 import com.bjtu.movie.utils.JwtUtil;
-import com.bjtu.movie.domain.LoginUser;
+import com.bjtu.movie.model.LoginUser;
 import com.bjtu.movie.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -95,9 +95,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         HashMap<String,String> map = new HashMap<>();
         User nowUser = loginUser.getUser();
         map.put("token",jwt);
-        map.put("permission",nowUser.getPermission());
+//        map.put("permission",nowUser.getPermission());
         map.put("name", nowUser.getName());
-        map.put("id", nowUser.getId().toString());
+//        map.put("id", nowUser.getId().toString());
 
         return map;
     }

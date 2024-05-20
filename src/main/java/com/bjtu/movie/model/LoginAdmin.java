@@ -1,6 +1,7 @@
-package com.bjtu.movie.domain;
+package com.bjtu.movie.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.bjtu.movie.entity.Admin;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

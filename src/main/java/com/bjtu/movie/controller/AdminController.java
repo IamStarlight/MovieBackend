@@ -2,10 +2,10 @@ package com.bjtu.movie.controller;
 
 
 import com.bjtu.movie.annotation.CurrentUser;
-import com.bjtu.movie.domain.Admin;
-import com.bjtu.movie.domain.User;
+import com.bjtu.movie.entity.Admin;
+import com.bjtu.movie.entity.User;
 import com.bjtu.movie.service.impl.AdminServiceImpl;
-import com.bjtu.movie.domain.Result;
+import com.bjtu.movie.model.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

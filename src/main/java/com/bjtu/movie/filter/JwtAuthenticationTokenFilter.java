@@ -1,11 +1,10 @@
 package com.bjtu.movie.filter;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bjtu.movie.constants.Role;
-import com.bjtu.movie.domain.LoginAdmin;
+import com.bjtu.movie.model.LoginAdmin;
 import com.bjtu.movie.exception.ServiceException;
 import com.bjtu.movie.utils.JwtUtil;
-import com.bjtu.movie.domain.LoginUser;
+import com.bjtu.movie.model.LoginUser;
 import com.bjtu.movie.utils.RedisCache;
 import com.bjtu.movie.utils.RegexUtil;
 import io.jsonwebtoken.Claims;
@@ -23,7 +22,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {

@@ -1,4 +1,4 @@
-package com.bjtu.movie.domain;
+package com.bjtu.movie.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

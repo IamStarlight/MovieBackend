@@ -1,7 +1,7 @@
 package com.bjtu.movie.utils;
 
 import com.bjtu.movie.annotation.CurrentUser;
-import com.bjtu.movie.domain.User;
+import com.bjtu.movie.entity.User;
 import com.bjtu.movie.exception.ServiceException;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;

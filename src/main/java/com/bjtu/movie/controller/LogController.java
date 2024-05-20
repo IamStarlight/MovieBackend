@@ -1,10 +1,10 @@
 package com.bjtu.movie.controller;
 
 import com.bjtu.movie.controller.dto.LoginDto;
-import com.bjtu.movie.domain.User;
+import com.bjtu.movie.entity.User;
 import com.bjtu.movie.service.impl.AdminServiceImpl;
 import com.bjtu.movie.service.impl.UserServiceImpl;
-import com.bjtu.movie.domain.Result;
+import com.bjtu.movie.model.Result;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

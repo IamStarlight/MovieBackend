@@ -1,7 +1,7 @@
-package com.bjtu.movie.mapper;
+package com.bjtu.movie.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.bjtu.movie.domain.User;
+import com.bjtu.movie.entity.User;
 
 /**
  * <p>

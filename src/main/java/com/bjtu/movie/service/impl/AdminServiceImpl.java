@@ -3,11 +3,11 @@ package com.bjtu.movie.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.bjtu.movie.controller.dto.LoginDto;
-import com.bjtu.movie.domain.Admin;
+import com.bjtu.movie.entity.Admin;
 import com.bjtu.movie.constants.Role;
-import com.bjtu.movie.domain.LoginAdmin;
+import com.bjtu.movie.model.LoginAdmin;
 import com.bjtu.movie.exception.ServiceException;
-import com.bjtu.movie.mapper.AdminMapper;
+import com.bjtu.movie.dao.AdminMapper;
 import com.bjtu.movie.service.IAdminService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bjtu.movie.utils.DateTimeUtil;
@@ -168,9 +168,9 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         HashMap<String,String> map = new HashMap<>();
         Admin nowAdmin = loginAdmin.getAdmin();
         map.put("token",jwt);
-        map.put("permission",nowAdmin.getPermission());
+//        map.put("permission",nowAdmin.getPermission());
         map.put("name", nowAdmin.getName());
-        map.put("id", nowAdmin.getId().toString());
+//        map.put("id", nowAdmin.getId().toString());
 
         return map;
     }

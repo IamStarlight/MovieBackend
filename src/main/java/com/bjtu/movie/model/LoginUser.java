@@ -1,7 +1,7 @@
-package com.bjtu.movie.domain;
+package com.bjtu.movie.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.bjtu.movie.domain.User;
+import com.bjtu.movie.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Data

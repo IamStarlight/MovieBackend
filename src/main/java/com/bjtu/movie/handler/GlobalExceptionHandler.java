@@ -1,7 +1,7 @@
 package com.bjtu.movie.handler;
 
 import com.bjtu.movie.exception.ServiceException;
-import com.bjtu.movie.domain.Result;
+import com.bjtu.movie.model.Result;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

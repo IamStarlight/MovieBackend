@@ -1,7 +1,7 @@
 package com.bjtu.movie.service;
 
 import com.bjtu.movie.controller.dto.LoginDto;
-import com.bjtu.movie.domain.Admin;
+import com.bjtu.movie.entity.Admin;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.HashMap;
