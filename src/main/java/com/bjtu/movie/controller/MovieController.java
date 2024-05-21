@@ -53,13 +53,13 @@ public class MovieController {
 
     /**
      * 根据imdb_id获取一部电影
-     * @param imdbId
+     * @param id
      * @return
      */
     @GetMapping("/imdb/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
-    public ResponseEntity<Result> getAMovieByImdbID(@PathVariable String imdbId){
-        return new ResponseEntity<>(Result.success(movieService.getAMovieByImdbID(imdbId)), HttpStatus.OK);
+    public ResponseEntity<Result> getAMovieByImdbID(@PathVariable String id){
+        return new ResponseEntity<>(Result.success(movieService.getAMovieByImdbID(id)), HttpStatus.OK);
     }
 
     /**
