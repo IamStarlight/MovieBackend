@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.bjtu.movie.handler.JsonListTypeHandler;
-import com.bjtu.movie.model.Actor;
+import com.bjtu.movie.model.Info;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -35,6 +35,6 @@ public class Keywords implements Serializable {
     private Integer id;
 
     @ApiModelProperty(value = "演职人员id和name")
-    @TableField(value = "keywords", typeHandler = JsonListTypeHandler.class)
-    private List<Actor> keywords;
+    @TableField(typeHandler = JsonListTypeHandler.class)
+    private List<Info> keywords;
 }

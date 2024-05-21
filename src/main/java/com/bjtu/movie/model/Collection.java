@@ -12,6 +12,6 @@ public class Collection {
      */
     private Integer id;
     private String name;
-    private String posterPath;
-    private String backdropPath;
+    private String poster_path;
+    private String backdrop_path;
 }
