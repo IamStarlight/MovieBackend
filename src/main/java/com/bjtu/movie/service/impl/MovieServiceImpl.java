@@ -33,10 +33,9 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
     private MovieMapper movieMapper;
 
     @Override
-    public Page<Movie> getAllMovies(Integer pageSize, Integer currentPage) {
+    public Page<Movie> getAllMovies(Integer currentPage, Integer pageSize) {
         LambdaQueryWrapper<Movie> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Movie::isDeleted,false);
-        //List<Employee> employeeList = employeePage.getRecords();
         return movieMapper.selectPage(new Page<>(currentPage,pageSize),wrapper);
     }
 
@@ -123,5 +122,32 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
         //todo: keywords ?
         wrapper.select(Movie::getId,Movie::getTitle,Movie::getVoteAverage,Movie::getVoteCount,Movie::getReleaseDate,Movie::getRuntime);
         return movieMapper.selectMapsPage(new Page<>(currentPage,pageSize),wrapper);
+    }
+
+    @Override
+    public void addNewMovie(Movie movie) {
+        //todo: 重复处理
+        movie.setVoteCount(0);
+        movie.setVoteAverage(0.0);
+        movie.setDeleted(false);
+        save(movie);
+    }
+
+    @Override
+    public void updateAMovieInfo(Movie movie) {
+        if(getAMovieByID(movie.getId()) == null){
+            throw new ServiceException(HttpStatus.FORBIDDEN.value(), "电影不存在");
+        }
+        updateById(movie);
+    }
+
+    @Override
+    public void deleteAMovie(Integer id) {
+        Movie movie = getAMovieByID(id);
+        if(movie == null){
+            throw new ServiceException(HttpStatus.FORBIDDEN.value(), "电影不存在");
+        }
+        movie.setDeleted(true);
+        updateById(movie);
     }
 }

@@ -1,6 +1,7 @@
 package com.bjtu.movie.controller;
 
 
+import com.bjtu.movie.entity.Movie;
 import com.bjtu.movie.model.Result;
 import com.bjtu.movie.service.impl.MovieServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,32 @@ public class MovieController {
     private MovieServiceImpl movieService;
 
     /**
+     * 添加一部电影
+     * @param movie
+     * @return
+     */
+    @PostMapping
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+    public ResponseEntity<Result> addNewMovie(@RequestBody Movie movie){
+        movieService.addNewMovie(movie);
+        return new ResponseEntity<>(Result.success(), HttpStatus.OK);
+    }
+
+    /**
+     * 更新电影信息
+     * @param id
+     * @param movie
+     * @return
+     */
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+    public ResponseEntity<Result> updateAMovieInfo(@PathVariable Integer id, @RequestBody Movie movie){
+        movie.setId(id);
+        movieService.updateAMovieInfo(movie);
+        return new ResponseEntity<>(Result.success(), HttpStatus.OK);
+    }
+
+    /**
      * 获取全部电影，分页
      * @param pageSize
      * @param currentPage
@@ -35,9 +62,9 @@ public class MovieController {
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
     public ResponseEntity<Result> getAllMovies(
-            @RequestParam(required = false,defaultValue = "1") Integer pageSize,
-            @RequestParam(required = false,defaultValue = "1") Integer currentPage){
-        return new ResponseEntity<>(Result.success(movieService.getAllMovies(pageSize,currentPage)), HttpStatus.OK);
+            @RequestParam(required = false,defaultValue = "1") Integer currentPage,
+            @RequestParam(required = false,defaultValue = "2") Integer pageSize){
+        return new ResponseEntity<>(Result.success(movieService.getAllMovies(currentPage,pageSize)), HttpStatus.OK);
     }
 
     /**
@@ -82,7 +109,7 @@ public class MovieController {
     @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
     public ResponseEntity<Result> getMoviesByIndex(
             @RequestParam(required = false,defaultValue = "1") Integer currentPage,
-            @RequestParam(required = false,defaultValue = "1") Integer pageSize,
+            @RequestParam(required = false,defaultValue = "2") Integer pageSize,
             @RequestParam(required = false) String sort,
             @RequestParam(required = false, defaultValue = "desc") String order,
             @RequestParam(required = false) List<String> genres,
@@ -98,5 +125,10 @@ public class MovieController {
                         currentPage, pageSize, sort, order, genres, startYear, endYear, ratingFrom, ratingTo, votesFrom, votesTo, keywords)), HttpStatus.OK);
     }
 
-
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+    public ResponseEntity<Result> deleteAMovie(@PathVariable Integer id){
+        movieService.deleteAMovie(id);
+        return new ResponseEntity<>(Result.success(), HttpStatus.OK);
+    }
 }

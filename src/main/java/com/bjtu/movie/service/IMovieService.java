@@ -17,11 +17,17 @@ import java.util.Map;
  */
 public interface IMovieService extends IService<Movie> {
 
-    Page<Movie> getAllMovies(Integer pageSize, Integer currentPage);
+    Page<Movie> getAllMovies(Integer currentPage, Integer pageSize);
 
     Movie getAMovieByID(Integer id);
 
     Movie getAMovieByImdbID(String imdbId);
 
     Page<Map<String, Object>> getMoviesByIndex(Integer currentPage, Integer pageSize, String sort, String order, List<String> genres, String startYear, String endYear, Double ratingFrom, Double ratingTo, Integer votesFrom, Integer votesTo, List<String> keywords);
+
+    void addNewMovie(Movie movie);
+
+    void updateAMovieInfo(Movie movie);
+
+    void deleteAMovie(Integer id);
 }
