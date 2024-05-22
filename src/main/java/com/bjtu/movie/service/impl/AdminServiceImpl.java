@@ -55,7 +55,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
             superAdmin.setName("超级管理员");
             superAdmin.setPassword(encodePassword("123"));
             superAdmin.setPermission(Role.ROLE_SUPER_ADMIN.getValue());
-            superAdmin.setCreatedAt(DateTimeUtil.getNowTimeString());
+            superAdmin.setCreatedAt(DateTimeUtil.createNowTimeString());
             save(superAdmin);
         }
     }
@@ -139,7 +139,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
             throw new ServiceException(HttpStatus.FORBIDDEN.value(), "用户名已存在");
         }
         newAdmin.setPassword(encodePassword(newAdmin.getPassword()));
-        newAdmin.setCreatedAt(DateTimeUtil.getNowTimeString());
+        newAdmin.setCreatedAt(DateTimeUtil.createNowTimeString());
         newAdmin.setPermission(Role.ROLE_ADMIN.getValue());
         newAdmin.setDeleted(false);
         save(newAdmin);

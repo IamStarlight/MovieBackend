@@ -65,6 +65,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                     new UsernamePasswordAuthenticationToken(
                             loginUser, null, loginUser.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+            request.setAttribute("CurrentUser",loginUser.getUser());
         }else{
             String redisKey = "admin login:" + userName;
             JSONObject jsonObject = redisCache.getCacheObject(redisKey);
@@ -79,8 +81,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                             loginAdmin, null, loginAdmin.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }
-
-//        request.setAttribute("CurrentUser",loginUser.getUser());
 
         //放行
         filterChain.doFilter(request, response);

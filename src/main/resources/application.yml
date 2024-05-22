@@ -15,7 +15,7 @@ spring:
 
 #  datasource:
 #    name: 'movie'
-#    url: jdbc:mysql://59.110.112.31:3306/movie?serverTimezone=GMT
+#    url: jdbc:mysql://59.110.112.31:3306/movie?autoReconnect=true&serverTimezone=GMT
 #    username: 'root'
 #    password: 'root'
 #    driver-class-name: com.mysql.cj.jdbc.Driver

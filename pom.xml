@@ -122,6 +122,12 @@
 			<artifactId>springfox-boot-starter</artifactId>
 			<version>3.0.0</version>
 		</dependency>
+		<!-- mybatis-plus-join -->
+		<dependency>
+			<groupId>com.github.yulichang</groupId>
+			<artifactId>mybatis-plus-join</artifactId>
+			<version>1.2.4</version>
+		</dependency>
 	</dependencies>
 
 	<repositories>

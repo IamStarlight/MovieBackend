@@ -3,6 +3,7 @@ package com.bjtu.movie.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bjtu.movie.constants.Sort;
+import com.bjtu.movie.entity.Keywords;
 import com.bjtu.movie.entity.Movie;
 import com.bjtu.movie.dao.MovieMapper;
 import com.bjtu.movie.exception.ServiceException;
@@ -12,6 +13,7 @@ import com.bjtu.movie.utils.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 
 import java.util.Date;
 import java.util.List;
@@ -119,7 +121,14 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
             wrapper.le(Movie::getVoteCount,votesTo);
         }
 
-        //todo: keywords ?
+        if (!keywords.isEmpty()){
+            for (String i: keywords) {
+                wrapper.inSql(Movie::getId,
+                        "select id from keywords "
+                            + "where JSON_CONTAINS(JSON_EXTRACT(keywords, '$[*].name'), CAST('\""+i+"\"' AS JSON), '$')");
+            }
+        }
+
         wrapper.select(Movie::getId,Movie::getTitle,Movie::getVoteAverage,Movie::getVoteCount,Movie::getReleaseDate,Movie::getRuntime);
         return movieMapper.selectMapsPage(new Page<>(currentPage,pageSize),wrapper);
     }
@@ -130,6 +139,7 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
         movie.setVoteCount(0);
         movie.setVoteAverage(0.0);
         movie.setDeleted(false);
+        //todo: id有问题
         save(movie);
     }
 

@@ -58,7 +58,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             throw new ServiceException(HttpStatus.FORBIDDEN.value(), "用户名已存在");
         }
         newUser.setPassword(encodePassword(newUser.getPassword()));
-        newUser.setCreatedAt(DateTimeUtil.getNowTimeString());
+        newUser.setCreatedAt(DateTimeUtil.createNowTimeString());
         newUser.setPermission(Role.ROLE_USER.getValue());
         newUser.setDeleted(false);
         save(newUser);

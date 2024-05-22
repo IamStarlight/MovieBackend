@@ -123,4 +123,12 @@ public class Movie implements Serializable {
 //            updateStrategy = FieldStrategy.NEVER,
 //            select = false)
 //    private String name;
+
+//    @TableField(value = "select * from keywords where id = ",
+//            insertStrategy = FieldStrategy.NEVER,
+//            updateStrategy = FieldStrategy.NEVER,
+//            select = false)
+
+//    @JoinTableField(table = "order", column = "orderName", joinColumn = "id", foreignKey = "userId")
+//    private Keywords keywords;
 }

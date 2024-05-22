@@ -3,7 +3,10 @@ package com.bjtu.movie.controller;
 
 import com.bjtu.movie.entity.Movie;
 import com.bjtu.movie.model.Result;
+import com.bjtu.movie.service.impl.CreditsServiceImpl;
+import com.bjtu.movie.service.impl.KeywordsServiceImpl;
 import com.bjtu.movie.service.impl.MovieServiceImpl;
+import com.bjtu.movie.service.impl.RatingsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +29,15 @@ public class MovieController {
 
     @Autowired
     private MovieServiceImpl movieService;
+
+    @Autowired
+    private CreditsServiceImpl creditsService;
+
+    @Autowired
+    private RatingsServiceImpl ratingsService;
+
+    @Autowired
+    private KeywordsServiceImpl keywordsService;
 
     /**
      * 添加一部电影
