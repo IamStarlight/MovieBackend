@@ -3,6 +3,7 @@ package com.bjtu.movie.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bjtu.movie.entity.Movie;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.bjtu.movie.model.MovieCalender;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ import java.util.Map;
  */
 public interface IMovieService extends IService<Movie> {
 
-    Page<Movie> getAllMovies(Integer currentPage, Integer pageSize);
+    Page<Map<String,Object>> getAllMovies(Integer currentPage, Integer pageSize);
 
     Movie getAMovieByID(Integer id);
 
@@ -30,4 +31,10 @@ public interface IMovieService extends IService<Movie> {
     void updateAMovieInfo(Movie movie);
 
     void deleteAMovie(Integer id);
+
+    List<Map<String, Object>> getTopNMovie();
+
+    List<Map<String, Object>> getMostPopularNMovie();
+
+    Page<MovieCalender> getMovieGroupByDate(Integer currentPage, Integer pageSize);
 }

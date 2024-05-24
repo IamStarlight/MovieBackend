@@ -3,22 +3,18 @@ package com.bjtu.movie.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bjtu.movie.constants.Sort;
-import com.bjtu.movie.entity.Keywords;
 import com.bjtu.movie.entity.Movie;
 import com.bjtu.movie.dao.MovieMapper;
 import com.bjtu.movie.exception.ServiceException;
+import com.bjtu.movie.model.MovieCalender;
 import com.bjtu.movie.service.IMovieService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bjtu.movie.utils.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * <p>
@@ -35,10 +31,11 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
     private MovieMapper movieMapper;
 
     @Override
-    public Page<Movie> getAllMovies(Integer currentPage, Integer pageSize) {
+    public Page<Map<String,Object>> getAllMovies(Integer currentPage, Integer pageSize) {
         LambdaQueryWrapper<Movie> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Movie::isDeleted,false);
-        return movieMapper.selectPage(new Page<>(currentPage,pageSize),wrapper);
+        wrapper.eq(Movie::isDeleted,false)
+                .select(Movie::getId,Movie::getTitle,Movie::getVoteAverage,Movie::getVoteCount,Movie::getReleaseDate,Movie::getRuntime);
+        return movieMapper.selectMapsPage(new Page<>(currentPage,pageSize),wrapper);
     }
 
     @Override
@@ -159,5 +156,44 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
         }
         movie.setDeleted(true);
         updateById(movie);
+    }
+
+    @Override
+    public List<Map<String, Object>> getTopNMovie() {
+        LambdaQueryWrapper<Movie> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(Movie::getId,Movie::getTitle,Movie::getVoteAverage,Movie::getVoteCount,Movie::getReleaseDate,Movie::getRuntime)
+                .orderByDesc(Movie::getVoteAverage)
+                .last("LIMIT 100");
+        return movieMapper.selectMaps(wrapper);
+    }
+
+    @Override
+    public List<Map<String, Object>> getMostPopularNMovie() {
+        LambdaQueryWrapper<Movie> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(Movie::getId,Movie::getTitle,Movie::getVoteAverage,Movie::getVoteCount,Movie::getReleaseDate,Movie::getRuntime)
+                .orderByDesc(Movie::getVoteAverage)
+                .last("LIMIT 250");
+        return movieMapper.selectMaps(wrapper);
+    }
+
+    @Override
+    public Page<MovieCalender> getMovieGroupByDate(Integer currentPage, Integer pageSize) {
+        Page<MovieCalender> movieCalenderPage = movieMapper.getMovieGroupByDate(new Page<>(currentPage,pageSize));
+        for(MovieCalender i: movieCalenderPage.getRecords()){
+            List<Map<String,Object>> movieList = new ArrayList<>();
+            List<Integer> idList = new ArrayList<>();
+            String[] stringIds = i.getIds().split(",");
+            for (String id: stringIds){
+                idList.add(Integer.valueOf(id));
+            }
+            for (Integer j: idList){
+                LambdaQueryWrapper<Movie> wrapper = new LambdaQueryWrapper<>();
+                wrapper.eq(Movie::getId,j)
+                        .select(Movie::getId,Movie::getTitle,Movie::getVoteAverage,Movie::getVoteCount,Movie::getReleaseDate,Movie::getRuntime);
+                movieList.add(getMap(wrapper));
+            }
+            i.setMovieList(movieList);
+        }
+        return movieCalenderPage;
     }
 }

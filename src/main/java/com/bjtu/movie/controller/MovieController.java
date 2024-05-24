@@ -30,15 +30,6 @@ public class MovieController {
     @Autowired
     private MovieServiceImpl movieService;
 
-    @Autowired
-    private CreditsServiceImpl creditsService;
-
-    @Autowired
-    private RatingsServiceImpl ratingsService;
-
-    @Autowired
-    private KeywordsServiceImpl keywordsService;
-
     /**
      * 添加一部电影
      * @param movie
@@ -102,6 +93,40 @@ public class MovieController {
     }
 
     /**
+     * 获取评分最高的100部电影
+     * @return
+     */
+    @GetMapping("/top")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+    public ResponseEntity<Result> getTopNMovie(){
+        return new ResponseEntity<>(Result.success(movieService.getTopNMovie()), HttpStatus.OK);
+    }
+
+    /**
+     * 获取最热门的50部电影
+     * @return
+     */
+    @GetMapping("/popular")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+    public ResponseEntity<Result> getMostPopularNMovie(){
+        return new ResponseEntity<>(Result.success(movieService.getMostPopularNMovie()), HttpStatus.OK);
+    }
+
+    /**
+     * 获取电影日历
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/calendar")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+    public ResponseEntity<Result> getMovieGroupByDate(
+            @RequestParam(required = false,defaultValue = "1") Integer currentPage,
+            @RequestParam(required = false,defaultValue = "2") Integer pageSize){
+        return new ResponseEntity<>(Result.success(movieService.getMovieGroupByDate(currentPage,pageSize)), HttpStatus.OK);
+    }
+
+    /**
      * 根据索引获取电影，分页
      * @param currentPage
      * @param pageSize
@@ -137,6 +162,11 @@ public class MovieController {
                         currentPage, pageSize, sort, order, genres, startYear, endYear, ratingFrom, ratingTo, votesFrom, votesTo, keywords)), HttpStatus.OK);
     }
 
+    /**
+     * 逻辑删除电影
+     * @param id
+     * @return
+     */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
     public ResponseEntity<Result> deleteAMovie(@PathVariable Integer id){

@@ -13,4 +13,5 @@ import com.bjtu.movie.entity.Keywords;
  */
 public interface IKeywordsService extends IService<Keywords> {
 
+    Object getKeywordsByMovieId(Integer id);
 }

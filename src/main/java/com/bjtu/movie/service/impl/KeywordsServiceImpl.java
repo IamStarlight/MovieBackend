@@ -1,7 +1,9 @@
 package com.bjtu.movie.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.bjtu.movie.entity.Keywords;
 import com.bjtu.movie.dao.KeywordsMapper;
+import com.bjtu.movie.entity.Movie;
 import com.bjtu.movie.service.IKeywordsService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,10 @@ import java.util.List;
 @Service
 public class KeywordsServiceImpl extends ServiceImpl<KeywordsMapper, Keywords> implements IKeywordsService {
 
-    public List<Keywords> getAllKeywords() {
-        return list();
+    @Override
+    public List<Keywords> getKeywordsByMovieId(Integer id) {
+        LambdaQueryWrapper<Keywords> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Keywords::getId,id);
+        return listObjs(wrapper);
     }
 }

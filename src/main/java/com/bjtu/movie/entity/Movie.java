@@ -131,4 +131,13 @@ public class Movie implements Serializable {
 
 //    @JoinTableField(table = "order", column = "orderName", joinColumn = "id", foreignKey = "userId")
 //    private Keywords keywords;
+
+    /*
+        SELECT release_date,COUNT(*),GROUP_CONCAT(id) from movies_metadata
+        GROUP BY release_date
+        ORDER BY release_date DESC
+         */
+//    @TableField(value = "SELECT GROUP_CONCAT(id) from movies_metadata GROUP BY release_date",
+//            exist = false)
+//    private List<Integer> groupId;
 }

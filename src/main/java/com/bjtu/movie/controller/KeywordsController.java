@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -27,9 +28,9 @@ public class KeywordsController {
     @Autowired
     private KeywordsServiceImpl keywordsService;
 
-    @GetMapping
+    @GetMapping("/movie/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
-    public ResponseEntity<Result> getAllKeywords(){
-        return new ResponseEntity<>(Result.success(keywordsService.getAllKeywords()), HttpStatus.OK);
+    public ResponseEntity<Result> getKeywordsByMovieId(@PathVariable Integer id){
+        return new ResponseEntity<>(Result.success(keywordsService.getKeywordsByMovieId(id)), HttpStatus.OK);
     }
 }
