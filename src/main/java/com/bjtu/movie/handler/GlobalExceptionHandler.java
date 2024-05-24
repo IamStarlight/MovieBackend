@@ -3,6 +3,7 @@ package com.bjtu.movie.handler;
 import com.bjtu.movie.exception.ServiceException;
 import com.bjtu.movie.model.Result;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.net.BindException;
+import java.nio.file.AccessDeniedException;
 
 @ControllerAdvice
 @RestControllerAdvice
@@ -92,10 +94,11 @@ public class GlobalExceptionHandler {
      * @param e
      * @return
      */
-//    @ExceptionHandler({RedisConnectionFailureException.class})
-//    @ResponseBody
-//    public ResponseEntity<Result> handleConnectionException(RedisConnectionFailureException e) {
-//        return ResponseEntity.internalServerError().body(Result.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()));
-//    }
+    @ExceptionHandler({RedisConnectionFailureException.class})
+    @ResponseBody
+    public ResponseEntity<Result> handleRedisConnectionException(RedisConnectionFailureException e) {
+        return ResponseEntity.internalServerError().body(Result.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()));
+    }
+
 }
 

@@ -63,7 +63,7 @@ public class MovieController {
      * @return
      */
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
     public ResponseEntity<Result> getAllMovies(
             @RequestParam(required = false,defaultValue = "1") Integer currentPage,
             @RequestParam(required = false,defaultValue = "2") Integer pageSize){
@@ -76,7 +76,7 @@ public class MovieController {
      * @return
      */
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
     public ResponseEntity<Result> getAMovieByID(@PathVariable Integer id){
         return new ResponseEntity<>(Result.success(movieService.getAMovieByID(id)), HttpStatus.OK);
     }
@@ -87,7 +87,7 @@ public class MovieController {
      * @return
      */
     @GetMapping("/imdb/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
     public ResponseEntity<Result> getAMovieByImdbID(@PathVariable String id){
         return new ResponseEntity<>(Result.success(movieService.getAMovieByImdbID(id)), HttpStatus.OK);
     }
@@ -97,7 +97,7 @@ public class MovieController {
      * @return
      */
     @GetMapping("/top")
-    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
     public ResponseEntity<Result> getTopNMovie(){
         return new ResponseEntity<>(Result.success(movieService.getTopNMovie()), HttpStatus.OK);
     }
@@ -107,7 +107,7 @@ public class MovieController {
      * @return
      */
     @GetMapping("/popular")
-    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
     public ResponseEntity<Result> getMostPopularNMovie(){
         return new ResponseEntity<>(Result.success(movieService.getMostPopularNMovie()), HttpStatus.OK);
     }
@@ -119,7 +119,7 @@ public class MovieController {
      * @return
      */
     @GetMapping("/calendar")
-    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
     public ResponseEntity<Result> getMovieGroupByDate(
             @RequestParam(required = false,defaultValue = "1") Integer currentPage,
             @RequestParam(required = false,defaultValue = "2") Integer pageSize){

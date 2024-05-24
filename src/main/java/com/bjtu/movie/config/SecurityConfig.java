@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,6 +21,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity //注解代替继承
 @RequiredArgsConstructor
+@EnableMethodSecurity
+@EnableGlobalAuthentication
 public class SecurityConfig {
 
     @Bean
@@ -26,29 +30,11 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    @Primary
-//    UserDetailsService u1(){
-//        return new UserDetailsServiceImpl();
-//    }
-//
-//    @Bean
-//    UserDetailsService u2(){
-//        return new AdminDetailsServiceImpl();
-//    }
     /**
      * 获取AuthenticationManager（认证管理器），登录时认证使用
      */
     @Bean
-    //AuthenticationConfiguration authenticationConfiguration
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-//        DaoAuthenticationProvider provider1 = new DaoAuthenticationProvider();
-//        provider1.setUserDetailsService(u1());
-//
-//        DaoAuthenticationProvider provider2 = new DaoAuthenticationProvider();
-//        provider2.setUserDetailsService(u2());
-//
-//        return new ProviderManager(provider1,provider2);
         return authenticationConfiguration.getAuthenticationManager();
     }
 
