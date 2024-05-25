@@ -1,7 +1,6 @@
 package com.bjtu.movie.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.bjtu.movie.dao.MovieMapper;
 import com.bjtu.movie.entity.Movie;
 import com.bjtu.movie.entity.Ratings;
 import com.bjtu.movie.dao.RatingsMapper;
@@ -10,8 +9,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bjtu.movie.utils.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * <p>
@@ -28,7 +25,7 @@ public class RatingsServiceImpl extends ServiceImpl<RatingsMapper, Ratings> impl
     private MovieServiceImpl movieService;
 
     @Override
-    public void createRating(Integer userId, Integer movieId, Double rating) {
+    public void createRating(Integer userId, Long movieId, Double rating) {
         Ratings newRating = new Ratings();
         newRating.setMovieId(movieId);
         newRating.setUserId(userId);
