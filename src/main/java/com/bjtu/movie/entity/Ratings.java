@@ -38,10 +38,4 @@ public class Ratings implements Serializable {
     @ApiModelProperty(value = "时间戳")
     private Long timestamp;
 
-    @TableField(value = "avg(rating)",
-            insertStrategy = FieldStrategy.NEVER,
-            updateStrategy = FieldStrategy.NEVER,
-            select = false)
-    private Double avg;
-
 }

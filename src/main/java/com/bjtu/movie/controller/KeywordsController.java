@@ -13,14 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * <p>
- *  前端控制器
- * </p>
- *
- * @author Jinxuan Chen
- * @since 2024-05-19
- */
 @RestController
 @RequestMapping("/keywords")
 public class KeywordsController {
@@ -29,7 +21,7 @@ public class KeywordsController {
     private KeywordsServiceImpl keywordsService;
 
     @GetMapping("/movie/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
     public ResponseEntity<Result> getKeywordsByMovieId(@PathVariable Integer id){
         return new ResponseEntity<>(Result.success(keywordsService.getKeywordsByMovieId(id)), HttpStatus.OK);
     }

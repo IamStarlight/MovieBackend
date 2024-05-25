@@ -10,14 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * <p>
- *  前端控制器
- * </p>
- *
- * @author Jinxuan Chen
- * @since 2024-05-10
- */
 @RestController
 @RequestMapping("/user")
 public class UserController {

@@ -29,22 +29,23 @@ public class RatingsServiceImpl extends ServiceImpl<RatingsMapper, Ratings> impl
 
     @Override
     public void createRating(Integer userId, Integer movieId, Double rating) {
-        Ratings ratings = new Ratings();
-        ratings.setMovieId(movieId);
-        ratings.setUserId(userId);
-        ratings.setRating(rating);
-        ratings.setTimestamp(DateTimeUtil.createNowTimeStamp());
-        saveOrUpdate(ratings);
+        Ratings newRating = new Ratings();
+        newRating.setMovieId(movieId);
+        newRating.setUserId(userId);
+        newRating.setRating(rating);
+        newRating.setTimestamp(DateTimeUtil.createNowTimeStamp());
+        saveOrUpdate(newRating);
 
         //更改电影总评分,添加评分人数
-        LambdaQueryWrapper<Ratings> wrapper = new LambdaQueryWrapper<>();
-        wrapper.select(Ratings::getAvg)
-                .eq(Ratings::getMovieId,movieId);
-        Ratings one = getOne(wrapper);
-        Movie movie = new Movie();
+        LambdaQueryWrapper<Movie> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Movie::getId,movieId)
+                .select(Movie::getVoteAverage,Movie::getVoteCount);
+        Movie movie = movieService.getOne(wrapper);
+        Integer voteCount = movie.getVoteCount();
+        double total = movie.getVoteAverage()*voteCount;
         movie.setId(movieId);
-        movie.setVoteAverage(one.getAvg());
-        movie.setVoteCount(movieService.getAMovieByID(movieId).getVoteCount()+1);
+        movie.setVoteAverage((total+rating)/(voteCount+1));
+        movie.setVoteCount(voteCount+1);
         movieService.updateAMovieInfo(movie);
     }
 }

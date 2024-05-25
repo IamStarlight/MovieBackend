@@ -12,14 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * <p>
- * 用户评分表 前端控制器
- * </p>
- *
- * @author Jinxuan Chen
- * @since 2024-05-21
- */
 @RestController
 @RequestMapping("/ratings")
 public class RatingsController {

@@ -1,10 +1,12 @@
 package com.bjtu.movie.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bjtu.movie.constants.Sort;
 import com.bjtu.movie.entity.Movie;
 import com.bjtu.movie.dao.MovieMapper;
+import com.bjtu.movie.entity.Total;
 import com.bjtu.movie.exception.ServiceException;
 import com.bjtu.movie.model.MovieCalender;
 import com.bjtu.movie.service.IMovieService;
@@ -30,6 +32,9 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
     @Autowired
     private MovieMapper movieMapper;
 
+    @Autowired
+    private TotalServiceImpl totalService;
+
     @Override
     public Page<Map<String,Object>> getAllMovies(Integer currentPage, Integer pageSize) {
         LambdaQueryWrapper<Movie> wrapper = new LambdaQueryWrapper<>();
@@ -39,7 +44,7 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
     }
 
     @Override
-    public Movie getAMovieByID(Integer id) {
+    public Movie getAMovieByID(Long id) {
         LambdaQueryWrapper<Movie> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Movie::getId,id)
                 .eq(Movie::isDeleted,false);
@@ -132,12 +137,27 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
 
     @Override
     public void addNewMovie(Movie movie) {
-        //todo: 重复处理
+        totalService.updateMovieTotalPlus();
+        movie.setId(totalService.getMovieId());
+        if(isSameMovie(movie)){
+            throw new ServiceException(HttpStatus.FORBIDDEN.value(), "电影已存在");
+        }
         movie.setVoteCount(0);
         movie.setVoteAverage(0.0);
         movie.setDeleted(false);
-        //todo: id有问题
         save(movie);
+    }
+
+    private boolean isSameMovie(Movie movie) {
+        LambdaQueryWrapper<Movie> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(!Objects.isNull(movie.getOriginalTitle()),Movie::getOriginalTitle,movie.getOriginalTitle())
+                .eq(!Objects.isNull(movie.getTitle()),Movie::getTitle,movie.getTitle())
+                .eq(!Objects.isNull(movie.getProductionCountries()),Movie::getProductionCompanies,movie.getProductionCompanies())
+                .eq(!Objects.isNull(movie.getProductionCountries()),Movie::getProductionCountries,movie.getProductionCountries())
+                .eq(!Objects.isNull(movie.getBelongsToCollection()),Movie::getBelongsToCollection,movie.getBelongsToCollection())
+                .eq(!Objects.isNull(movie.getAdult()),Movie::getAdult,movie.getAdult())
+                .eq(!Objects.isNull(movie.getReleaseDate()),Movie::getReleaseDate,movie.getReleaseDate());
+        return Objects.isNull(getOne(wrapper));
     }
 
     @Override
@@ -149,7 +169,7 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
     }
 
     @Override
-    public void deleteAMovie(Integer id) {
+    public void deleteAMovie(Long id) {
         Movie movie = getAMovieByID(id);
         if(movie == null){
             throw new ServiceException(HttpStatus.FORBIDDEN.value(), "电影不存在");

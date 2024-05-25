@@ -13,14 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * <p>
- * 演职人员信息 前端控制器
- * </p>
- *
- * @author Jinxuan Chen
- * @since 2024-05-21
- */
 @RestController
 @RequestMapping("/credits")
 public class CreditsController {
@@ -29,7 +21,7 @@ public class CreditsController {
     private CreditsServiceImpl creditsService;
 
     @GetMapping("/movie/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
     public ResponseEntity<Result> getCreditsByMovieId(@PathVariable String id){
         return new ResponseEntity<>(Result.success(creditsService.getCreditsByMovieId(id)), HttpStatus.OK);
     }
