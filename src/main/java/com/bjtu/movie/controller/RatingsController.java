@@ -21,7 +21,7 @@ public class RatingsController {
 
     @PostMapping("/movie/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER')")
-    public ResponseEntity<Result> createRating(@CurrentUser User user,@PathVariable Integer id, @RequestParam Double rating){
+    public ResponseEntity<Result> createRating(@CurrentUser User user,@PathVariable Long id, @RequestParam Double rating){
         ratingsService.createRating(user.getId(),id,rating);
         return new ResponseEntity<>(Result.success(), HttpStatus.OK);
     }
