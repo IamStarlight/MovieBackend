@@ -137,11 +137,11 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
 
     @Override
     public void addNewMovie(Movie movie) {
-        totalService.updateMovieTotalPlus();
-        movie.setId(totalService.getMovieId());
-        if(isSameMovie(movie)){
+        if(!isSameMovie(movie)){
             throw new ServiceException(HttpStatus.FORBIDDEN.value(), "电影已存在");
         }
+        totalService.updateMovieTotalPlus();
+        movie.setId(totalService.getMovieId());
         movie.setVoteCount(0);
         movie.setVoteAverage(0.0);
         movie.setDeleted(false);
@@ -165,7 +165,9 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
         if(getAMovieByID(movie.getId()) == null){
             throw new ServiceException(HttpStatus.FORBIDDEN.value(), "电影不存在");
         }
-        updateById(movie);
+        LambdaUpdateWrapper<Movie> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(Movie::getId,movie.getId());
+        update(movie,wrapper);
     }
 
     @Override
@@ -174,8 +176,10 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
         if(movie == null){
             throw new ServiceException(HttpStatus.FORBIDDEN.value(), "电影不存在");
         }
-        movie.setDeleted(true);
-        updateById(movie);
+        LambdaUpdateWrapper<Movie> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(Movie::getId,movie.getId())
+                .set(Movie::isDeleted, true);
+        update(wrapper);
     }
 
     @Override
