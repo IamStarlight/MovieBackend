@@ -21,9 +21,9 @@ import java.util.List;
 public class KeywordsServiceImpl extends ServiceImpl<KeywordsMapper, Keywords> implements IKeywordsService {
 
     @Override
-    public List<Keywords> getKeywordsByMovieId(Integer id) {
+    public Keywords getKeywordsByMovieId(Integer id) {
         LambdaQueryWrapper<Keywords> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Keywords::getId,id);
-        return listObjs(wrapper);
+        return getOne(wrapper);
     }
 }
