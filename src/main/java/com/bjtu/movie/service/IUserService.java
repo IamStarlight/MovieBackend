@@ -37,4 +37,6 @@ public interface IUserService extends IService<User> {
     Map<String, Object> getOneUser(Integer id);
 
     void deleteOneUser(Integer id);
+
+    User getCurrentUser();
 }

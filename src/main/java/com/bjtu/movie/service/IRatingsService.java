@@ -1,9 +1,7 @@
 package com.bjtu.movie.service;
 
-import com.bjtu.movie.annotation.CurrentUser;
 import com.bjtu.movie.entity.Ratings;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.bjtu.movie.entity.User;
 
 /**
  * <p>

@@ -7,6 +7,7 @@ import com.bjtu.movie.entity.User;
 import com.bjtu.movie.model.LoginUser;
 import com.bjtu.movie.model.Result;
 import com.bjtu.movie.service.impl.RatingsServiceImpl;
+import com.bjtu.movie.service.impl.UserServiceImpl;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
@@ -28,21 +29,20 @@ public class RatingsController {
     @Autowired
     private RatingsServiceImpl ratingsService;
 
+    @Autowired
+    private UserServiceImpl userService;
+
     /**
      * 用户评分
-     * @param user
      * @param id
      * @param rating
      * @return
      */
     @PostMapping("/movies/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER')")
-    public ResponseEntity<Result> createRating(@CurrentUser User user,
-                                               @PathVariable Long id,
+    public ResponseEntity<Result> createRating(@PathVariable Long id,
                                                @RequestParam @DecimalMin("0.0") @DecimalMax("10.0") Double rating){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-        Integer userId = loginUser.getUser().getId();
+        Integer userId = userService.getCurrentUser().getId();
         ratingsService.createRating(userId,id,rating);
         return new ResponseEntity<>(Result.success(), HttpStatus.OK);
     }

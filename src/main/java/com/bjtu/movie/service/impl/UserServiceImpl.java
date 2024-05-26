@@ -163,4 +163,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 .set(User::isDeleted,true);
         update(wrapper);
     }
+
+
+    @Override
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        return loginUser.getUser();
+    }
 }
