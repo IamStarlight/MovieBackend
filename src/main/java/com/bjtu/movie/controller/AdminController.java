@@ -12,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 管理员管理
+ */
 @RestController
 @RequestMapping("/admin")
 public class AdminController {

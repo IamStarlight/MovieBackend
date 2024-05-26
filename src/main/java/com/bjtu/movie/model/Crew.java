@@ -17,7 +17,6 @@ public class Crew {
      */
     private String credit_id;
     private String department;
-    @EnumValue
     private Gender gender;
     private Integer id;
     private String job;

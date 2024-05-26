@@ -33,8 +33,7 @@ spring:
 
   main:
     allow-circular-references: true
-#    web-application-type: NONE
-    # Logger Config
+
   logging:
     level:
       com.hexadecimal: debug

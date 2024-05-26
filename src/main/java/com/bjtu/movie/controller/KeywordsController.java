@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 关键词管理
+ */
 @RestController
 @RequestMapping("/keywords")
 public class KeywordsController {

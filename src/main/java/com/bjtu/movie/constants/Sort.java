@@ -18,14 +18,15 @@ public enum Sort {
 
     SORT_BY_RUNTIME("Runtime", "按电影时长排列");
 
-    private String per;
-    private String desc;
+    private final String per;
+    private final String desc;
 
     Sort(String per, String desc){
         this.per = per;
         this.desc = desc;
     }
 
+    @Override
     public String toString(){
         return desc;
     }

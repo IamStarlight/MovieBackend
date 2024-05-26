@@ -19,7 +19,6 @@ public class Cast {
     private Integer cast_id;
     private String character;
     private String credit_id;
-    @EnumValue
     private Gender gender;
     private Integer id;
     private String name;

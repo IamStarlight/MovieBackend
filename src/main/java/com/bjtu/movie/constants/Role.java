@@ -8,14 +8,15 @@ public enum Role {
     ROLE_USER("ROLE_USER", "普通用户");
 
 
-    private String per;
-    private String desc;
+    private final String per;
+    private final String desc;
 
     Role(String per, String desc){
         this.per = per;
         this.desc = desc;
     }
 
+    @Override
     public String toString(){
         return desc;
     }

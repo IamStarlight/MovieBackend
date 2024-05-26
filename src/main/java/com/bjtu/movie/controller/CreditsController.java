@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 演职人员信息管理
+ */
 @RestController
 @RequestMapping("/credits")
 public class CreditsController {
@@ -20,7 +23,12 @@ public class CreditsController {
     @Autowired
     private CreditsServiceImpl creditsService;
 
-    @GetMapping("/movie/{id}")
+    /**
+     * 根据电影id获取演职人员信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/movies/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
     public ResponseEntity<Result> getCreditsByMovieId(@PathVariable String id){
         return new ResponseEntity<>(Result.success(creditsService.getCreditsByMovieId(id)), HttpStatus.OK);

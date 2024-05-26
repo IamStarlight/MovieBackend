@@ -20,9 +20,9 @@ import java.util.List;
 @Service
 public class CreditsServiceImpl extends ServiceImpl<CreditsMapper, Credits> implements ICreditsService {
 
-    public List<Credits> getCreditsByMovieId(String id) {
+    public Credits getCreditsByMovieId(String id) {
         LambdaQueryWrapper<Credits> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Credits::getId,id);
-        return listObjs(wrapper);
+        return getOne(wrapper);
     }
 }
