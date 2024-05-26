@@ -16,4 +16,8 @@ import com.bjtu.movie.entity.User;
 public interface IRatingsService extends IService<Ratings> {
 
     void createRating(Integer userId, Long movieId, Double rating);
+
+    Double getRatingAvgByMovie(Long movieId);
+
+    Ratings getRatingByIds(Integer userId, Long movieId);
 }

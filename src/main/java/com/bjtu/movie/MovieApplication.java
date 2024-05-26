@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan("com.bjtu.movie.dao")
+@MapperScan("com.bjtu.movie.mapper")
 public class MovieApplication {
 
 	public static void main(String[] args) {

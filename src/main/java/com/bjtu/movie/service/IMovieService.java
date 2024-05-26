@@ -37,4 +37,7 @@ public interface IMovieService extends IService<Movie> {
     List<Map<String, Object>> getMostPopularNMovie();
 
     Page<MovieCalender> getMovieGroupByDate(Integer currentPage, Integer pageSize);
+
+    void updateTotalRating(Integer userId, Long movieId, Double rating);
+
 }

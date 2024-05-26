@@ -1,7 +1,7 @@
 package com.bjtu.movie.service.impl;
 
 import com.bjtu.movie.entity.Links;
-import com.bjtu.movie.dao.LinksMapper;
+import com.bjtu.movie.mapper.LinksMapper;
 import com.bjtu.movie.service.ILinksService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;

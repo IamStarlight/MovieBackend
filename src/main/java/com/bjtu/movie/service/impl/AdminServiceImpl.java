@@ -7,7 +7,7 @@ import com.bjtu.movie.entity.Admin;
 import com.bjtu.movie.constants.Role;
 import com.bjtu.movie.model.LoginAdmin;
 import com.bjtu.movie.exception.ServiceException;
-import com.bjtu.movie.dao.AdminMapper;
+import com.bjtu.movie.mapper.AdminMapper;
 import com.bjtu.movie.service.IAdminService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bjtu.movie.utils.DateTimeUtil;

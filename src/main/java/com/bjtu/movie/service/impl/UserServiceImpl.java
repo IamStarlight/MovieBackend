@@ -6,7 +6,7 @@ import com.bjtu.movie.controller.dto.LoginDto;
 import com.bjtu.movie.entity.User;
 import com.bjtu.movie.constants.Role;
 import com.bjtu.movie.exception.ServiceException;
-import com.bjtu.movie.dao.UserMapper;
+import com.bjtu.movie.mapper.UserMapper;
 import com.bjtu.movie.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bjtu.movie.utils.DateTimeUtil;

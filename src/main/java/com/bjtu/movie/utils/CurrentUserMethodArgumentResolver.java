@@ -25,7 +25,7 @@ public class CurrentUserMethodArgumentResolver implements HandlerMethodArgumentR
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         User user = (User) webRequest.getAttribute("CurrentUser", RequestAttributes.SCOPE_REQUEST);
-//        System.out.println("!!!!!!CurrentUserResolver user: "+user);
+        System.out.println("!!!!!!CurrentUserResolver user: "+user);
         if (user == null)
             throw new ServiceException(HttpStatus.NO_CONTENT.value(), "CurrentUser为空");
         return user;

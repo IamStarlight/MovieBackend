@@ -5,8 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bjtu.movie.constants.Sort;
 import com.bjtu.movie.entity.Movie;
-import com.bjtu.movie.dao.MovieMapper;
-import com.bjtu.movie.entity.Total;
+import com.bjtu.movie.mapper.MovieMapper;
 import com.bjtu.movie.exception.ServiceException;
 import com.bjtu.movie.model.MovieCalender;
 import com.bjtu.movie.service.IMovieService;
@@ -16,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -219,5 +219,23 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
             i.setMovieList(movieList);
         }
         return movieCalenderPage;
+    }
+
+    @Override
+    public void updateTotalRating(Integer userId, Long movieId, Double rating) {
+        LambdaQueryWrapper<Movie> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Movie::getId,movieId)
+                .select(Movie::getVoteAverage,Movie::getVoteCount);
+        Movie movie = getOne(wrapper);
+
+        Integer oldVoteCount = movie.getVoteCount();
+        Double total = movie.getVoteAverage()*oldVoteCount;
+
+        DecimalFormat df = new DecimalFormat("#.0");
+        Double newVoteAverage = (total+rating)/(oldVoteCount+1);
+        movie.setId(movieId);
+        movie.setVoteAverage(Double.valueOf(df.format(newVoteAverage)));
+        movie.setVoteCount(oldVoteCount+1);
+        updateAMovieInfo(movie);
     }
 }

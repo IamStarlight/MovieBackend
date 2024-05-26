@@ -1,4 +1,4 @@
-package com.bjtu.movie.dao;
+package com.bjtu.movie.mapper;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -7,8 +7,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.bjtu.movie.model.MovieCalender;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-
-import java.util.Map;
 
 /**
  * <p>

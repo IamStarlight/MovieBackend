@@ -1,13 +1,16 @@
 package com.bjtu.movie.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.bjtu.movie.entity.Movie;
 import com.bjtu.movie.entity.Ratings;
-import com.bjtu.movie.dao.RatingsMapper;
+import com.bjtu.movie.exception.ServiceException;
+import com.bjtu.movie.mapper.RatingsMapper;
 import com.bjtu.movie.service.IRatingsService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bjtu.movie.utils.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,6 +27,9 @@ public class RatingsServiceImpl extends ServiceImpl<RatingsMapper, Ratings> impl
     @Autowired
     private MovieServiceImpl movieService;
 
+    @Autowired
+    private RatingsMapper ratingsMapper;
+
     @Override
     public void createRating(Integer userId, Long movieId, Double rating) {
         Ratings newRating = new Ratings();
@@ -31,18 +37,45 @@ public class RatingsServiceImpl extends ServiceImpl<RatingsMapper, Ratings> impl
         newRating.setUserId(userId);
         newRating.setRating(rating);
         newRating.setTimestamp(DateTimeUtil.createNowTimeStamp());
-        saveOrUpdate(newRating);
+        if(getRatingByIds(userId,movieId) != null) {
+            LambdaUpdateWrapper<Ratings> wrapper = new LambdaUpdateWrapper<>();
+            wrapper.eq(Ratings::getUserId,userId)
+                    .eq(Ratings::getMovieId,movieId)
+                    .set(Ratings::getRating,rating);
+            update(wrapper);
 
-        //更改电影总评分,添加评分人数
-        LambdaQueryWrapper<Movie> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Movie::getId,movieId)
-                .select(Movie::getVoteAverage,Movie::getVoteCount);
-        Movie movie = movieService.getOne(wrapper);
-        Integer voteCount = movie.getVoteCount();
-        double total = movie.getVoteAverage()*voteCount;
-        movie.setId(movieId);
-        movie.setVoteAverage((total+rating)/(voteCount+1));
-        movie.setVoteCount(voteCount+1);
-        movieService.updateAMovieInfo(movie);
+            //更新电影评分，不需要添加评分人数
+            Movie movie = new Movie();
+            movie.setId(movieId);
+            movie.setVoteAverage(getRatingAvgByMovie(movieId));
+            movieService.updateAMovieInfo(movie);
+        }else {
+            save(newRating);
+            //更新电影评分，添加评分人数
+            movieService.updateTotalRating(userId,movieId,rating);
+        }
     }
+
+    @Override
+    public Double getRatingAvgByMovie(Long movieId) {
+        LambdaQueryWrapper<Ratings> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Ratings::getMovieId, movieId)
+                .last("LIMIT 1");;
+        if(listObjs(wrapper) == null){
+            throw new ServiceException(HttpStatus.NOT_FOUND.value(), "电影不存在");
+        }else{
+            return ratingsMapper.getRatingAvgByMovie(movieId);
+        }
+    }
+
+    @Override
+    public Ratings getRatingByIds(Integer userId, Long movieId) {
+        LambdaQueryWrapper<Ratings> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Ratings::getUserId,userId)
+                .eq(Ratings::getMovieId,movieId);
+        return getOne(wrapper);
+    }
+
+
+
 }

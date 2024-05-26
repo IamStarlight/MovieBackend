@@ -3,7 +3,7 @@ package com.bjtu.movie.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.bjtu.movie.entity.Total;
-import com.bjtu.movie.dao.TotalMapper;
+import com.bjtu.movie.mapper.TotalMapper;
 import com.bjtu.movie.service.ITotalService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;

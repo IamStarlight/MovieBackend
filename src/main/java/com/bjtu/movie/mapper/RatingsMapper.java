@@ -1,7 +1,9 @@
-package com.bjtu.movie.dao;
+package com.bjtu.movie.mapper;
 
 import com.bjtu.movie.entity.Ratings;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * <p>
@@ -13,4 +15,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface RatingsMapper extends BaseMapper<Ratings> {
 
+    @Select("SELECT AVG(rating) FROM ratings WHERE movie_id=#{movieId}")
+    Double getRatingAvgByMovie(@Param("movieId") Long movieId);
 }

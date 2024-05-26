@@ -2,8 +2,7 @@ package com.bjtu.movie.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.bjtu.movie.entity.Keywords;
-import com.bjtu.movie.dao.KeywordsMapper;
-import com.bjtu.movie.entity.Movie;
+import com.bjtu.movie.mapper.KeywordsMapper;
 import com.bjtu.movie.service.IKeywordsService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;

@@ -2,7 +2,7 @@ package com.bjtu.movie.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.bjtu.movie.entity.Credits;
-import com.bjtu.movie.dao.CreditsMapper;
+import com.bjtu.movie.mapper.CreditsMapper;
 import com.bjtu.movie.service.ICreditsService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;

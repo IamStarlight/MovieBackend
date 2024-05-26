@@ -128,7 +128,13 @@
 			<artifactId>mybatis-plus-join</artifactId>
 			<version>1.2.4</version>
 		</dependency>
-	</dependencies>
+		<!-- 自定义注解 -->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework</groupId>-->
+<!--            <artifactId>spring-webmvc</artifactId>-->
+<!--            <version>6.0.7</version>-->
+<!--        </dependency>-->
+    </dependencies>
 
 	<repositories>
 		<repository>
