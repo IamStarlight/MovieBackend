@@ -45,7 +45,7 @@ public class MovieController {
      */
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
-    public ResponseEntity<Result> updateAMovieInfo(@PathVariable Long id, @RequestBody Movie movie){
+    public ResponseEntity<Result> updateAMovieInfo(@PathVariable Integer id, @RequestBody Movie movie){
         movie.setId(id);
         movieService.updateAMovieInfo(movie);
         return new ResponseEntity<>(Result.success(), HttpStatus.OK);
@@ -72,7 +72,7 @@ public class MovieController {
      */
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
-    public ResponseEntity<Result> getAMovieByID(@PathVariable Long id){
+    public ResponseEntity<Result> getAMovieByID(@PathVariable Integer id){
         return new ResponseEntity<>(Result.success(movieService.getAMovieByID(id)), HttpStatus.OK);
     }
 
@@ -164,7 +164,7 @@ public class MovieController {
      */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
-    public ResponseEntity<Result> deleteAMovie(@PathVariable Long id){
+    public ResponseEntity<Result> deleteAMovie(@PathVariable Integer id){
         movieService.deleteAMovie(id);
         return new ResponseEntity<>(Result.success(), HttpStatus.OK);
     }

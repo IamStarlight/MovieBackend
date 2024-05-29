@@ -15,5 +15,5 @@ public interface ITotalService extends IService<Total> {
 
     void updateMovieTotalPlus();
 
-    Long getMovieId();
+    Integer getMovieId();
 }

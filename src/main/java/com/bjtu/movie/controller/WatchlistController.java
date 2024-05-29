@@ -22,6 +22,12 @@ public class WatchlistController {
     @Autowired
     private UserServiceImpl userService;
 
+    /**
+     * 加入关注列表
+     * @param id
+     * @param movieId
+     * @return
+     */
     @PostMapping("/user/{id}/watchlist")
     @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     public ResponseEntity<Result> addToWatchlist(@PathVariable Integer id,
@@ -31,6 +37,11 @@ public class WatchlistController {
         return new ResponseEntity<>(Result.success(), HttpStatus.OK);
     }
 
+    /**
+     * 获取指定用户的关注列表
+     * @param id
+     * @return
+     */
     @GetMapping("/user/{id}/watchlist")
     @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     public ResponseEntity<Result> getWatchlist(@PathVariable Integer id) {

@@ -30,7 +30,7 @@ public class Ratings implements Serializable {
     private Integer userId;
 
     @ApiModelProperty(value = "电影id")
-    private Long movieId;
+    private Integer movieId;
 
     @ApiModelProperty(value = "评分")
     private Double rating;

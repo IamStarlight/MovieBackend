@@ -55,7 +55,7 @@ public class Movie implements Serializable {
     private String homepage;
 
     @ApiModelProperty(value = "电影id")
-    private Long id;
+    private Integer id;
 
     @ApiModelProperty(value = "imdb id")
     private String imdbId;

@@ -2,6 +2,7 @@ package com.bjtu.movie.controller;
 
 
 import com.bjtu.movie.annotation.CurrentUser;
+import com.bjtu.movie.controller.dto.RatingDto;
 import com.bjtu.movie.entity.Ratings;
 import com.bjtu.movie.entity.User;
 import com.bjtu.movie.model.LoginUser;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -35,15 +37,14 @@ public class RatingsController {
     /**
      * 用户评分
      * @param id
-     * @param rating
+     * @param ratingDto
      * @return
      */
     @PostMapping("/movies/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER')")
-    public ResponseEntity<Result> createRating(@PathVariable Long id,
-                                               @RequestParam @DecimalMin("0.0") @DecimalMax("10.0") Double rating){
-        Integer userId = userService.getCurrentUser().getId();
-        ratingsService.createRating(userId,id,rating);
+    public ResponseEntity<Result> createRating(@PathVariable Integer id,
+                                               @RequestBody @Validated RatingDto ratingDto){
+        ratingsService.createRating(userService.getCurrentUser().getId(),id,ratingDto.getRating());
         return new ResponseEntity<>(Result.success(), HttpStatus.OK);
     }
 

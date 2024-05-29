@@ -16,5 +16,5 @@ import org.apache.ibatis.annotations.Select;
 public interface RatingsMapper extends BaseMapper<Ratings> {
 
     @Select("SELECT AVG(rating) FROM ratings WHERE movie_id=#{movieId}")
-    Double getRatingAvgByMovie(@Param("movieId") Long movieId);
+    Double getRatingAvgByMovie(@Param("movieId") Integer movieId);
 }

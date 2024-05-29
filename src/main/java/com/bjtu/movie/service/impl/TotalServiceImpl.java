@@ -28,7 +28,7 @@ public class TotalServiceImpl extends ServiceImpl<TotalMapper, Total> implements
     }
 
     @Override
-    public Long getMovieId() {
+    public Integer getMovieId() {
         LambdaQueryWrapper<Total> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Total::getId,1)
                 .select(Total::getMovieTotal);

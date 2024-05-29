@@ -44,7 +44,7 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
     }
 
     @Override
-    public Movie getAMovieByID(Long id) {
+    public Movie getAMovieByID(Integer id) {
         LambdaQueryWrapper<Movie> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Movie::getId,id)
                 .eq(Movie::isDeleted,false);
@@ -171,7 +171,7 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
     }
 
     @Override
-    public void deleteAMovie(Long id) {
+    public void deleteAMovie(Integer id) {
         Movie movie = getAMovieByID(id);
         if(movie == null){
             throw new ServiceException(HttpStatus.FORBIDDEN.value(), "电影不存在");
@@ -222,7 +222,7 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
     }
 
     @Override
-    public void updateTotalRating(Integer userId, Long movieId, Double rating) {
+    public void updateTotalRating(Integer userId, Integer movieId, Double rating) {
         LambdaQueryWrapper<Movie> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Movie::getId,movieId)
                 .select(Movie::getVoteAverage,Movie::getVoteCount);

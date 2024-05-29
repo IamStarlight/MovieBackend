@@ -1,5 +1,6 @@
 package com.bjtu.movie.service;
 
+import com.bjtu.movie.controller.dto.RatingDto;
 import com.bjtu.movie.entity.Ratings;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,9 +14,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IRatingsService extends IService<Ratings> {
 
-    void createRating(Integer userId, Long movieId, Double rating);
+    Double getRatingAvgByMovie(Integer movieId);
 
-    Double getRatingAvgByMovie(Long movieId);
+    Ratings getRatingByIds(Integer userId, Integer movieId);
 
-    Ratings getRatingByIds(Integer userId, Long movieId);
+    void createRating(Integer userId, Integer movieId, Double rating);
 }

@@ -20,7 +20,7 @@ public interface IMovieService extends IService<Movie> {
 
     Page<Map<String,Object>> getAllMovies(Integer currentPage, Integer pageSize);
 
-    Movie getAMovieByID(Long id);
+    Movie getAMovieByID(Integer id);
 
     Movie getAMovieByImdbID(String imdbId);
 
@@ -30,7 +30,7 @@ public interface IMovieService extends IService<Movie> {
 
     void updateAMovieInfo(Movie movie);
 
-    void deleteAMovie(Long id);
+    void deleteAMovie(Integer id);
 
     List<Map<String, Object>> getTopNMovie();
 
@@ -38,6 +38,6 @@ public interface IMovieService extends IService<Movie> {
 
     Page<MovieCalender> getMovieGroupByDate(Integer currentPage, Integer pageSize);
 
-    void updateTotalRating(Integer userId, Long movieId, Double rating);
+    void updateTotalRating(Integer userId, Integer movieId, Double rating);
 
 }

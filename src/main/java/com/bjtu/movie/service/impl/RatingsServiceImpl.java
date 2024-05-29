@@ -31,13 +31,34 @@ public class RatingsServiceImpl extends ServiceImpl<RatingsMapper, Ratings> impl
     private RatingsMapper ratingsMapper;
 
     @Override
-    public void createRating(Integer userId, Long movieId, Double rating) {
+    public Double getRatingAvgByMovie(Integer movieId) {
+        LambdaQueryWrapper<Ratings> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Ratings::getMovieId, movieId)
+                .last("LIMIT 1");;
+        if(listObjs(wrapper) == null){
+            throw new ServiceException(HttpStatus.NOT_FOUND.value(), "电影不存在");
+        }else{
+            return ratingsMapper.getRatingAvgByMovie(movieId);
+        }
+    }
+
+    @Override
+    public Ratings getRatingByIds(Integer userId, Integer movieId) {
+        LambdaQueryWrapper<Ratings> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Ratings::getUserId,userId)
+                .eq(Ratings::getMovieId,movieId);
+        return getOne(wrapper);
+    }
+
+
+    @Override
+    public void createRating(Integer userId, Integer movieId, Double rating) {
         Ratings newRating = new Ratings();
         newRating.setMovieId(movieId);
         newRating.setUserId(userId);
         newRating.setRating(rating);
         newRating.setTimestamp(DateTimeUtil.createNowTimeStamp());
-        if(getRatingByIds(userId,movieId) != null) {
+        if(getRatingByIds(userId, movieId) != null) {
             LambdaUpdateWrapper<Ratings> wrapper = new LambdaUpdateWrapper<>();
             wrapper.eq(Ratings::getUserId,userId)
                     .eq(Ratings::getMovieId,movieId)
@@ -52,30 +73,7 @@ public class RatingsServiceImpl extends ServiceImpl<RatingsMapper, Ratings> impl
         }else {
             save(newRating);
             //更新电影评分，添加评分人数
-            movieService.updateTotalRating(userId,movieId,rating);
+            movieService.updateTotalRating(userId, movieId, rating);
         }
     }
-
-    @Override
-    public Double getRatingAvgByMovie(Long movieId) {
-        LambdaQueryWrapper<Ratings> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Ratings::getMovieId, movieId)
-                .last("LIMIT 1");;
-        if(listObjs(wrapper) == null){
-            throw new ServiceException(HttpStatus.NOT_FOUND.value(), "电影不存在");
-        }else{
-            return ratingsMapper.getRatingAvgByMovie(movieId);
-        }
-    }
-
-    @Override
-    public Ratings getRatingByIds(Integer userId, Long movieId) {
-        LambdaQueryWrapper<Ratings> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Ratings::getUserId,userId)
-                .eq(Ratings::getMovieId,movieId);
-        return getOne(wrapper);
-    }
-
-
-
 }

@@ -29,6 +29,6 @@ public class Total implements Serializable {
 
     private Integer id;
 
-    private Long movieTotal;
+    private Integer movieTotal;
 
 }
