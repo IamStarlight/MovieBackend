@@ -273,7 +273,62 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
 
     @Override
     public List<Map<String,Object>> getRecommendMovie(Integer id) {
-        return null;
+
+//      String pythonPath = "C:\\Users\\84579\\Desktop\\Movie-Recommendation-System\\simpleIMDB.py";
+//      String pythonPath = "C:\\Codefield\\CODE_PYTHON\\Movie-Recommendation-System\\content-plotDescription.py";
+//      String pythonPath = "C:\\Codefield\\CODE_PYTHON\\Movie-Recommendation-System\\content-2.py";
+        String pythonPath = "C:\\Users\\84579\\Desktop\\Movie-Recommendation-System\\collaborative-filtering.py";
+//      String[] arguments = new String[] {"python",pythonPath};//指定命令、路径、传递的参数
+//      String[] arguments = new String[] {"python",pythonPath,String.valueOf(238)};//指定命令、路径、传递的参数
+//      String[] arguments = new String[] {"python",pythonPath,String.valueOf(238)};//指定命令、路径、传递的参数
+        String[] arguments = new String[] {"python",pythonPath,String.valueOf(id)};//指定命令、路径、传递的参数
+        StringBuilder sbrs = null;
+        StringBuilder sberror = null;
+        try {
+            ProcessBuilder builder = new ProcessBuilder(arguments);
+            Process process = builder.start();
+            BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream(), "utf-8"));//获取字符输入流对象
+            BufferedReader error = new BufferedReader(new InputStreamReader(process.getErrorStream(), "utf-8"));//获取错误信息的字符输入流对象
+            String line = null;
+            sbrs = new StringBuilder();
+            sberror = new StringBuilder();
+            //记录输出结果
+            while ((line = in.readLine()) != null) {
+                sbrs.append(line);
+            }
+            //记录错误信息
+            while ((line = error.readLine()) != null) {
+                sberror.append(line);
+            }
+            in.close();
+            process.waitFor();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+sbrs);
+        System.out.println(sberror);
+
+        ArrayList<Integer> integerList = new ArrayList<>();
+        if (sbrs != null) {
+            // 去除方括号并分割字符串
+            String content = sbrs.toString().trim();
+            Pattern pattern = Pattern.compile("\\d+");
+            Matcher matcher = pattern.matcher(content);
+            while (matcher.find()) {
+                integerList.add(Integer.parseInt(matcher.group()));
+            }
+        }
+        System.out.println(integerList);
+        List<Map<String,Object>> result = new ArrayList<>();
+        for (Integer movieId : integerList) {
+            Map<String,Object> tmp = getMovieBriefById(movieId);
+            if(tmp != null) {
+                result.add(tmp);
+            }
+        }
+
+        System.out.println(sberror);
+        return result;
     }
 
     @Override
@@ -342,6 +397,61 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
 
     @Override
     public List<Map<String,Object>> getRelatedRecommendMovie(Integer id) {
-        return null;
+
+//        String pythonPath = "C:\\Users\\84579\\Desktop\\Movie-Recommendation-System\\simpleIMDB.py";
+        String pythonPath = "C:\\Users\\84579\\Desktop\\Movie-Recommendation-System\\content-plotDescription.py";
+//      String pythonPath = "C:\\Users\\84579\\Desktop\\Movie-Recommendation-System\\content-2.py";
+//      String pythonPath = "C:\\Codefield\\CODE_PYTHON\\Movie-Recommendation-System\\collaborative-filtering.py";
+//        String[] arguments = new String[] {"python",pythonPath};//指定命令、路径、传递的参数
+        String[] arguments = new String[] {"python",pythonPath,String.valueOf(id)};//指定命令、路径、传递的参数
+//      String[] arguments = new String[] {"python",pythonPath,String.valueOf(id)};//指定命令、路径、传递的参数
+//      String[] arguments = new String[] {"python",pythonPath,String.valueOf(1)};//指定命令、路径、传递的参数
+        StringBuilder sbrs = null;
+        StringBuilder sberror = null;
+        try {
+            ProcessBuilder builder = new ProcessBuilder(arguments);
+            Process process = builder.start();
+            BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream(), "utf-8"));//获取字符输入流对象
+            BufferedReader error = new BufferedReader(new InputStreamReader(process.getErrorStream(), "utf-8"));//获取错误信息的字符输入流对象
+            String line = null;
+            sbrs = new StringBuilder();
+            sberror = new StringBuilder();
+            //记录输出结果
+            while ((line = in.readLine()) != null) {
+                sbrs.append(line);
+            }
+            //记录错误信息
+            while ((line = error.readLine()) != null) {
+                sberror.append(line);
+            }
+            in.close();
+            process.waitFor();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(sbrs);
+        System.out.println(sberror);
+
+        ArrayList<Integer> integerList = new ArrayList<>();
+        if (sbrs != null) {
+            // 去除方括号并分割字符串
+            String content = sbrs.toString().trim();
+            Pattern pattern = Pattern.compile("\\d+");
+            Matcher matcher = pattern.matcher(content);
+            while (matcher.find()) {
+                integerList.add(Integer.parseInt(matcher.group()));
+            }
+        }
+        System.out.println(integerList);
+        List<Map<String,Object>> result = new ArrayList<>();
+        for (Integer movieId : integerList) {
+            Map<String,Object> tmp = getMovieBriefById(movieId);
+            if(tmp != null) {
+                result.add(tmp);
+            }
+        }
+
+        System.out.println(sberror);
+        return result;
     }
 }

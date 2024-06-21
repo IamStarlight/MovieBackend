@@ -40,7 +40,7 @@ public class RecommendController {
      * 电影的相关推荐
      * @return
      */
-    @GetMapping("/movie/{id}/hot")
+    @GetMapping("/movie/{id}/relativity")
     //@PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
     public ResponseEntity<Result> getRelatedRecommendMovie(@PathVariable Integer id){
         return new ResponseEntity<>(Result.success(movieService.getRelatedRecommendMovie(id)), HttpStatus.OK);
