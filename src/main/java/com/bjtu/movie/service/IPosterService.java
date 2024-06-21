@@ -1,5 +1,6 @@
 package com.bjtu.movie.service;
 
+import com.bjtu.movie.entity.Movie;
 import com.bjtu.movie.entity.Poster;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -14,4 +15,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IPosterService extends IService<Poster> {
 
     String getPosterPathById(Integer id);
+
+    void addNewPosterPath(Integer id, String posterPath, String backdropPath);
+
+    void updateAPoster(Integer id, String posterPath);
+
 }

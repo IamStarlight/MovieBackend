@@ -121,26 +121,4 @@ public class Movie implements Serializable {
     @ApiModelProperty(value = "是否删除")
     private boolean deleted;
 
-//    @TableField(value = "genres ->> '$[*].name'",
-//            insertStrategy = FieldStrategy.NEVER,
-//            updateStrategy = FieldStrategy.NEVER,
-//            select = false)
-//    private String name;
-
-//    @TableField(value = "select * from keywords where id = ",
-//            insertStrategy = FieldStrategy.NEVER,
-//            updateStrategy = FieldStrategy.NEVER,
-//            select = false)
-
-//    @JoinTableField(table = "order", column = "orderName", joinColumn = "id", foreignKey = "userId")
-//    private Keywords keywords;
-
-    /*
-        SELECT release_date,COUNT(*),GROUP_CONCAT(id) from movies_metadata
-        GROUP BY release_date
-        ORDER BY release_date DESC
-         */
-//    @TableField(value = "SELECT GROUP_CONCAT(id) from movies_metadata GROUP BY release_date",
-//            exist = false)
-//    private List<Integer> groupId;
 }

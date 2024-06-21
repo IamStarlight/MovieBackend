@@ -14,4 +14,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IWatchlistService extends IService<Watchlist> {
 
     void addToWatchlist(Integer userId, Long movieId);
+
+    void removeOutOfWatchlist(Integer id, Long movieId);
 }

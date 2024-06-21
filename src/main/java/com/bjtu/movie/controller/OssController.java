@@ -15,7 +15,7 @@ import java.io.File;
 import java.io.InputStream;
 
 @RestController
-@RequestMapping("/movie/{mid}")
+@RequestMapping("/movie/")
 public class OssController {
 
     @SneakyThrows

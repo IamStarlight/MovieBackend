@@ -53,7 +53,15 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
 
     @Override
     public Movie getAMovieByID(Integer id) {
-        return movieMapper.getAMovieByID(id);
+        LambdaQueryWrapper<Movie> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Movie::getId,id)
+                .eq(Movie::isDeleted,false);
+        Movie movie = getOne(wrapper);
+        if(movie != null){
+            movie.setPosterPath(posterService.getPosterPathById(id));
+        }
+        return movie;
+//        return movieMapper.getAMovieByID(id);
     }
 
     @Override
@@ -455,5 +463,52 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
 
         System.out.println(sberror);
         return result;
+    }
+
+    @Override
+    public List<Map<String,Object>> searchMovies(String searchKey) {
+        LambdaQueryWrapper<Movie> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(Movie::getTitle,searchKey)
+                .or()
+                .like(Movie::getOriginalTitle,searchKey)
+                .or()
+                .like(Movie::getOverview,searchKey)
+                .or()
+                .like(Movie::getTagline,searchKey)
+//                .or()
+//                .like(Movie::getKeywords,searchKey)
+                .or()
+                .like(Movie::getGenres,searchKey)
+                .or()
+                .like(Movie::getProductionCompanies,searchKey)
+                .or()
+                .like(Movie::getProductionCountries,searchKey)
+                .or()
+                .like(Movie::getSpokenLanguages,searchKey)
+                .or()
+                .like(Movie::getBelongsToCollection,searchKey)
+                .or()
+                .like(Movie::getImdbId,searchKey)
+                .or()
+                .like(Movie::getHomepage,searchKey)
+                .or()
+                .like(Movie::getBudget,searchKey)
+                .or()
+                .like(Movie::getRevenue,searchKey)
+                .or()
+                .like(Movie::getRuntime,searchKey)
+                .or()
+                .like(Movie::getVoteAverage,searchKey)
+                .or()
+                .like(Movie::getVoteCount,searchKey)
+                .or()
+                .like(Movie::getPopularity,searchKey)
+                .or()
+                .like(Movie::getReleaseDate,searchKey)
+                .or()
+                .like(Movie::getAdult,searchKey)
+                .or()
+                .like(Movie::isDeleted,searchKey);
+        return listMaps(wrapper);
     }
 }

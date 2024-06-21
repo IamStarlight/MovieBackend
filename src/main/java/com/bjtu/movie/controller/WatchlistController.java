@@ -48,4 +48,18 @@ public class WatchlistController {
 //        Integer userId = userService.getCurrentUser().getId();
         return new ResponseEntity<>(Result.success(watchlistService.getWatchlist(id)), HttpStatus.OK);
     }
+
+    /**
+     * 移出关注列表
+     * @param id
+     * @param movieId
+     * @return
+     */
+    @DeleteMapping("/user/{id}/watchlist")
+    //@PreAuthorize("hasAnyAuthority('ROLE_USER')")
+    public ResponseEntity<Result> removeOutOfWatchlist(@PathVariable Integer id,
+                                                 @RequestParam Long movieId) {
+        watchlistService.removeOutOfWatchlist(id,movieId);
+        return new ResponseEntity<>(Result.success(), HttpStatus.OK);
+    }
 }

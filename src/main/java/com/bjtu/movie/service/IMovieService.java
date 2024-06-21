@@ -47,4 +47,6 @@ public interface IMovieService extends IService<Movie> {
     Map<String, Object> getMovieBriefById(Integer id);
 
     List<Map<String,Object>> getRelatedRecommendMovie(Integer id);
+
+    List<Map<String,Object>> searchMovies(String searchKey);
 }

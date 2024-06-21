@@ -1,6 +1,7 @@
 package com.bjtu.movie.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.bjtu.movie.entity.Watchlist;
 import com.bjtu.movie.mapper.WatchlistMapper;
 import com.bjtu.movie.exception.ServiceException;
@@ -47,5 +48,13 @@ public class WatchlistServiceImpl extends ServiceImpl<WatchlistMapper, Watchlist
 
     public List<Map<String,Object>> getWatchlist(Integer userId) {
         return watchlistMapper.getWatchlist(userId);
+    }
+
+    @Override
+    public void removeOutOfWatchlist(Integer id, Long movieId) {
+        LambdaUpdateWrapper<Watchlist> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(Watchlist::getUserId,id)
+                .eq(Watchlist::getMovieId,movieId);
+        remove(wrapper);
     }
 }

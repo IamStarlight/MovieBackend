@@ -2,11 +2,9 @@ package com.bjtu.movie.controller;
 
 
 import com.bjtu.movie.entity.Movie;
+import com.bjtu.movie.entity.Poster;
 import com.bjtu.movie.model.Result;
-import com.bjtu.movie.service.impl.CreditsServiceImpl;
-import com.bjtu.movie.service.impl.KeywordsServiceImpl;
-import com.bjtu.movie.service.impl.MovieServiceImpl;
-import com.bjtu.movie.service.impl.RatingsServiceImpl;
+import com.bjtu.movie.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +22,8 @@ public class MovieController {
 
     @Autowired
     private MovieServiceImpl movieService;
+    @Autowired
+    private PosterServiceImpl posterService;
 
     /**
      * 添加一部电影
@@ -34,6 +34,8 @@ public class MovieController {
     //@PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
     public ResponseEntity<Result> addNewMovie(@RequestBody Movie movie){
         movieService.addNewMovie(movie);
+//        System.out.println(movie.getPosterPath());
+        posterService.addNewPosterPath(movie.getId(),movie.getPosterPath(), null);
         return new ResponseEntity<>(Result.success(), HttpStatus.OK);
     }
 
@@ -48,6 +50,7 @@ public class MovieController {
     public ResponseEntity<Result> updateAMovieInfo(@PathVariable Integer id, @RequestBody Movie movie){
         movie.setId(id);
         movieService.updateAMovieInfo(movie);
+        posterService.updateAPoster(movie.getId(),movie.getPosterPath());
         return new ResponseEntity<>(Result.success(), HttpStatus.OK);
     }
 
@@ -76,16 +79,16 @@ public class MovieController {
         return new ResponseEntity<>(Result.success(movieService.getAMovieByID(id)), HttpStatus.OK);
     }
 
-//    /**
-//     * 根据imdb_id获取一部电影
-//     * @param id
-//     * @return
-//     */
-//    @GetMapping("/imdb/{id}")
-//    //@PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
-//    public ResponseEntity<Result> getAMovieByImdbID(@PathVariable String id){
-//        return new ResponseEntity<>(Result.success(movieService.getAMovieByImdbID(id)), HttpStatus.OK);
-//    }
+    /**
+     * 搜索电影
+     * @param searchKey
+     * @return
+     */
+    @GetMapping("/search")
+    //@PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
+    public ResponseEntity<Result> searchMovies(@RequestParam String searchKey){
+        return new ResponseEntity<>(Result.success(movieService.searchMovies(searchKey)), HttpStatus.OK);
+    }
 
     /**
      * 获取评分最高的100部电影

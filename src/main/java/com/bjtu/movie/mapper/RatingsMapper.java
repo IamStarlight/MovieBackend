@@ -24,6 +24,7 @@ public interface RatingsMapper extends BaseMapper<Ratings> {
     @Select("SELECT movie_id,title,a.rating,poster_path,vote_average,vote_count,release_date,runtime " +
             "FROM ratings as a,movies_metadata as b " +
             "WHERE a.user_id=#{uid} " +
-            "and a.movie_id=b.id")
+            "and a.movie_id=b.id " +
+            "ORDER BY timestamp DESC")
     List<Map<String, Object>> getMyRatingMovie(@Param("uid") Integer uid);
 }
