@@ -8,8 +8,6 @@ import com.aliyun.oss.model.GetObjectRequest;
 
 import java.io.InputStream;
 
-import static com.bjtu.movie.service.OssPushService.uploadFile;
-
 public class OssGetService {
 
     private static final String ENDPOINT = "";
