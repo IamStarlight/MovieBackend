@@ -1,0 +1,149 @@
+-- auto-generated definition
+create table credits
+(
+    cast json null comment '演员信息',
+    crew json null comment '工作人员信息',
+    id   int  null comment '电影id'
+)
+    comment '演职人员信息';
+
+-- auto-generated definition
+create table admin
+(
+    id         int auto_increment comment '管理员id'
+        primary key,
+    name       varchar(255)         null comment '管理员名称',
+    password   varchar(255)         null comment '管理员密码',
+    permission varchar(255)         null comment '管理员权限',
+    created_at varchar(255)         null comment '创建时间',
+    deleted    tinyint(1) default 0 null comment '是否删除'
+)
+    comment '管理员表';
+
+-- auto-generated definition
+create table genres
+(
+    id      int          not null comment '类别id',
+    name    varchar(255) null comment '类别名称',
+    deleted tinyint(1)   null comment '是否删除',
+    constraint genres_pk
+        unique (id)
+)
+    comment '电影类别表';
+
+-- auto-generated definition
+create table watchlist
+(
+    user_id   int    null comment '用户id',
+    movie_id  bigint null comment '电影id',
+    timestamp bigint null comment '时间戳'
+)
+    comment '关注清单';
+
+-- auto-generated definition
+create table total
+(
+    id    int auto_increment comment '自增主键'
+        primary key,
+    name  varchar(255) null comment '数据库名称',
+    total int          null
+);
+
+-- auto-generated definition
+create table links_small
+(
+    movieId int          null comment '电影id',
+    imdbId  varchar(255) null comment 'imdb id',
+    tmdbId  varchar(255) null comment 'tmdb id'
+)
+    comment '电影id和imdb/tmdb id之间的映射';
+
+-- auto-generated definition
+create table links
+(
+    movieId int          null comment '电影id',
+    imdbId  varchar(255) null comment 'imdb id',
+    tmdbId  varchar(255) null comment 'tmdb id'
+)
+    comment '电影id和imdb/tmdb id之间的映射';
+
+-- auto-generated definition
+create table keywords
+(
+    id       int  null comment '电影id',
+    keywords json null comment '关键词'
+)
+    comment '关键词信息';
+
+-- auto-generated definition
+create table user
+(
+    id         int auto_increment comment '用户id'
+        primary key,
+    name       varchar(255)         null comment '用户名',
+    password   varchar(255)         null comment '用户密码',
+    permission varchar(255)         null comment '用户权限',
+    created_at varchar(255)         null comment '创建时间',
+    deleted    tinyint(1) default 0 null comment '是否删除'
+);
+
+-- auto-generated definition
+create table movies_metadata
+(
+    adult                 enum ('FALSE', 'TRUE') null comment '是否是成人电影',
+    belongs_to_collection json                   null comment '属于哪个系列',
+    budget                int                    null comment '预算',
+    genres                json                   null comment '流派',
+    homepage              varchar(255)           null comment '主页',
+    id                    int                    not null comment '电影id',
+    imdb_id               varchar(255)           null comment 'imdb id',
+    original_language     varchar(255)           null comment '电影原始语言',
+    original_title        varchar(255)           null comment '电影原始标题',
+    overview              text                   null comment '概述',
+    popularity            double                 null comment '人气',
+    poster_path           varchar(255)           null comment '海报图像路径',
+    production_companies  json                   null comment '出版公司',
+    production_countries  json                   null comment '出版国家',
+    release_date          date                   null comment '上映时间',
+    revenue               int                    null comment '收入',
+    runtime               int                    null comment '时长',
+    spoken_languages      json                   null comment '使用的语言',
+    status                varchar(255)           null comment '状态',
+    tagline               varchar(255)           null comment '宣传标语',
+    title                 varchar(255)           null comment '标题',
+    video                 enum ('FALSE', 'TRUE') null comment '是否有视频',
+    vote_average          double                 null comment '平均评分',
+    vote_count            int                    null comment '评分人数',
+    deleted               tinyint(1) default 0   null comment '是否删除'
+)
+    comment '所有影片信息';
+
+-- auto-generated definition
+create table poster
+(
+    id            varchar(255) not null,
+    poster_path   varchar(255) null,
+    backdrop_path varchar(255) null
+);
+
+-- auto-generated definition
+create table ratings
+(
+    user_id   int    null comment '用户id',
+    movie_id  int    null comment '电影id',
+    rating    double null comment '评分',
+    timestamp bigint null comment '时间戳'
+)
+    comment '用户评分表';
+
+-- auto-generated definition
+create table ratings_small
+(
+    user_id   int        null comment '用户id',
+    movie_id  int        null comment '电影id',
+    rating    double     null comment '评分',
+    timestamp mediumtext null comment '时间戳'
+)
+    comment '用户评分表小';
+
+
