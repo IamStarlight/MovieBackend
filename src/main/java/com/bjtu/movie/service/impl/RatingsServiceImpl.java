@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * <p>
  * 用户评分表 服务实现类
@@ -75,5 +78,10 @@ public class RatingsServiceImpl extends ServiceImpl<RatingsMapper, Ratings> impl
             //更新电影评分，添加评分人数
             movieService.updateTotalRating(userId, movieId, rating);
         }
+    }
+
+    @Override
+    public List<Map<String,Object>> getMyRatingMovie(Integer uid) {
+        return ratingsMapper.getMyRatingMovie(uid);
     }
 }

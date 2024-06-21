@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
  * 评分管理
  */
 @RestController
-@RequestMapping("/ratings")
 public class RatingsController {
 
     @Autowired
@@ -40,12 +39,24 @@ public class RatingsController {
      * @param ratingDto
      * @return
      */
-    @PostMapping("/movies/{id}")
+    @PostMapping("/user/{uid}/movies/{id}/ratings")
     //@PreAuthorize("hasAnyAuthority('ROLE_USER')")
-    public ResponseEntity<Result> createRating(@PathVariable Integer id,
+    public ResponseEntity<Result> createRating(@PathVariable Integer uid,
+                                               @PathVariable Integer id,
                                                @RequestBody @Validated RatingDto ratingDto){
-        ratingsService.createRating(userService.getCurrentUser().getId(),id,ratingDto.getRating());
+        ratingsService.createRating(uid,id,ratingDto.getRating());
         return new ResponseEntity<>(Result.success(), HttpStatus.OK);
+    }
+
+    /**
+     * 获取用户评分的所有电影
+     * @param uid
+     * @return
+     */
+    @GetMapping("/user/{uid}/movies/ratings")
+    //@PreAuthorize("hasAnyAuthority('ROLE_USER')")
+    public ResponseEntity<Result> getMyRatingMovie(@PathVariable Integer uid){
+        return new ResponseEntity<>(Result.success(ratingsService.getMyRatingMovie(uid)), HttpStatus.OK);
     }
 
 }
