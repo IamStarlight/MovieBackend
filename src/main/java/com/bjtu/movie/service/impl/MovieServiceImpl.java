@@ -35,20 +35,21 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
     @Autowired
     private TotalServiceImpl totalService;
 
+    @Autowired
+    private PosterServiceImpl posterService;
+
     @Override
     public Page<Map<String,Object>> getAllMovies(Integer currentPage, Integer pageSize) {
-        LambdaQueryWrapper<Movie> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Movie::isDeleted,false)
-                .select(Movie::getId,Movie::getTitle,Movie::getVoteAverage,Movie::getVoteCount,Movie::getReleaseDate,Movie::getRuntime);
-        return movieMapper.selectMapsPage(new Page<>(currentPage,pageSize),wrapper);
+//        LambdaQueryWrapper<Movie> wrapper = new LambdaQueryWrapper<>();
+//        wrapper.eq(Movie::isDeleted,false)
+//                .select(Movie::getId,Movie::getTitle,Movie::getVoteAverage,Movie::getVoteCount,Movie::getReleaseDate,Movie::getRuntime);
+//        return movieMapper.selectMapsPage(new Page<>(currentPage,pageSize),wrapper);
+        return movieMapper.getAllMovies(new Page<>(currentPage,pageSize));
     }
 
     @Override
     public Movie getAMovieByID(Integer id) {
-        LambdaQueryWrapper<Movie> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Movie::getId,id)
-                .eq(Movie::isDeleted,false);
-        return getOne(wrapper);
+        return movieMapper.getAMovieByID(id);
     }
 
     @Override
@@ -81,6 +82,7 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
 
         wrapper.eq(Movie::isDeleted,false);
 
+        //排序
         if(!sort.isBlank()) {
             wrapper.orderBy(sort.equals(Sort.SORT_BY_RATING.getValue()), isAsc(order), Movie::getVoteAverage);
             wrapper.orderBy(sort.equals(Sort.SORT_BY_NUMBER_OF_RATINGS.getValue()), isAsc(order), Movie::getVoteCount);
@@ -89,12 +91,14 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
             wrapper.orderBy(sort.equals(Sort.SORT_BY_RUNTIME.getValue()), isAsc(order), Movie::getRuntime);
         }
 
+        //筛选分类
         if(!genres.isEmpty()){
             for (String i: genres) {
                 wrapper.apply("JSON_CONTAINS(JSON_EXTRACT(genres, '$[*].name'), CAST('\""+i+"\"' AS JSON), '$')");
             }
         }
 
+        //筛选年份
         if (!startYear.isBlank() && !endYear.isBlank()){
             Date startDate = DateTimeUtil.getYearStartDate(startYear);
             Date endDate = DateTimeUtil.getYearEndDate(endYear);
@@ -107,6 +111,7 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
             wrapper.le(Movie::getReleaseDate,endDate);
         }
 
+        //筛选评分
         if(!Objects.isNull(ratingFrom) && !Objects.isNull(ratingTo)){
             wrapper.between(Movie::getVoteAverage,ratingFrom,ratingTo);
         }else if(!Objects.isNull(ratingFrom)){
@@ -115,6 +120,7 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
             wrapper.le(Movie::getVoteAverage,ratingTo);
         }
 
+        //筛选评分人数
         if(!Objects.isNull(votesFrom) && !Objects.isNull(votesTo)){
             wrapper.between(Movie::getVoteCount,votesFrom,votesTo);
         }else if(!Objects.isNull(votesFrom)){
@@ -123,6 +129,7 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
             wrapper.le(Movie::getVoteCount,votesTo);
         }
 
+        //筛选关键词
         if (!keywords.isEmpty()){
             for (String i: keywords) {
                 wrapper.inSql(Movie::getId,
@@ -132,7 +139,13 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
         }
 
         wrapper.select(Movie::getId,Movie::getTitle,Movie::getVoteAverage,Movie::getVoteCount,Movie::getReleaseDate,Movie::getRuntime);
-        return movieMapper.selectMapsPage(new Page<>(currentPage,pageSize),wrapper);
+        //return movieMapper.selectMapsPage(new Page<>(currentPage,pageSize),wrapper);
+
+        //获取海报
+        Page<Map<String,Object>> tmp = movieMapper.selectMapsPage(new Page<>(currentPage,pageSize),wrapper);
+        tmp.getRecords().forEach(i ->
+                i.put("poster_path", posterService.getPosterPathById((Integer) i.get("id"))));
+        return tmp;
     }
 
     @Override
@@ -144,6 +157,7 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
         movie.setId(totalService.getMovieId());
         movie.setVoteCount(0);
         movie.setVoteAverage(0.0);
+        movie.setPopularity(0.0);
         movie.setDeleted(false);
         save(movie);
     }
@@ -184,38 +198,52 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
 
     @Override
     public List<Map<String, Object>> getTopNMovie() {
-        LambdaQueryWrapper<Movie> wrapper = new LambdaQueryWrapper<>();
-        wrapper.select(Movie::getId,Movie::getTitle,Movie::getVoteAverage,Movie::getVoteCount,Movie::getReleaseDate,Movie::getRuntime)
-                .orderByDesc(Movie::getVoteAverage)
-                .last("LIMIT 100");
-        return movieMapper.selectMaps(wrapper);
+//        LambdaQueryWrapper<Movie> wrapper = new LambdaQueryWrapper<>();
+//        wrapper.select(Movie::getId,Movie::getTitle,Movie::getVoteAverage,Movie::getVoteCount,Movie::getReleaseDate,Movie::getRuntime)
+//                .orderByDesc(Movie::getVoteAverage)
+//                .last("LIMIT 100");
+//        return movieMapper.selectMaps(wrapper);
+        return movieMapper.getTopNMovie();
     }
 
     @Override
     public List<Map<String, Object>> getMostPopularNMovie() {
-        LambdaQueryWrapper<Movie> wrapper = new LambdaQueryWrapper<>();
-        wrapper.select(Movie::getId,Movie::getTitle,Movie::getVoteAverage,Movie::getVoteCount,Movie::getReleaseDate,Movie::getRuntime)
-                .orderByDesc(Movie::getVoteAverage)
-                .last("LIMIT 250");
-        return movieMapper.selectMaps(wrapper);
+//        LambdaQueryWrapper<Movie> wrapper = new LambdaQueryWrapper<>();
+//        wrapper.select(Movie::getId,Movie::getTitle,Movie::getVoteAverage,Movie::getVoteCount,Movie::getReleaseDate,Movie::getRuntime)
+//                .orderByDesc(Movie::getPopularity)
+//                .last("LIMIT 50");
+//        return movieMapper.selectMaps(wrapper);
+        return movieMapper.getMostPopularNMovie();
     }
 
     @Override
     public Page<MovieCalender> getMovieGroupByDate(Integer currentPage, Integer pageSize) {
+        //获取所有电影的日期
         Page<MovieCalender> movieCalenderPage = movieMapper.getMovieGroupByDate(new Page<>(currentPage,pageSize));
+        //遍历movieCalenderPage中的所有记录
         for(MovieCalender i: movieCalenderPage.getRecords()){
+            //存储电影的信息
             List<Map<String,Object>> movieList = new ArrayList<>();
+            //存储电影的ID
             List<Integer> idList = new ArrayList<>();
+            //获取当前MovieCalender对象的ids属性（这是一个包含多个电影ID的字符串），然后使用,作为分隔符将其分割成一个字符串数组
             String[] stringIds = i.getIds().split(",");
+            //遍历stringIds数组，将每个ID转换为整数，并添加到idList列表中
             for (String id: stringIds){
                 idList.add(Integer.valueOf(id));
             }
+            //遍历idList中的所有电影ID
             for (Integer j: idList){
                 LambdaQueryWrapper<Movie> wrapper = new LambdaQueryWrapper<>();
                 wrapper.eq(Movie::getId,j)
                         .select(Movie::getId,Movie::getTitle,Movie::getVoteAverage,Movie::getVoteCount,Movie::getReleaseDate,Movie::getRuntime);
-                movieList.add(getMap(wrapper));
+                Map<String,Object> tmpMap = getMap(wrapper);
+                String posterPath = posterService.getPosterPathById((Integer) tmpMap.get("id"));
+                tmpMap.put("poster_path", Objects.requireNonNullElse(posterPath, "null"));
+                //执行查询并将结果添加到movieList列表中
+                movieList.add(tmpMap);
             }
+            //将movieList设置为当前MovieCalender对象的movieList属性
             i.setMovieList(movieList);
         }
         return movieCalenderPage;

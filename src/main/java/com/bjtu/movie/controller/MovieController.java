@@ -76,16 +76,16 @@ public class MovieController {
         return new ResponseEntity<>(Result.success(movieService.getAMovieByID(id)), HttpStatus.OK);
     }
 
-    /**
-     * 根据imdb_id获取一部电影
-     * @param id
-     * @return
-     */
-    @GetMapping("/imdb/{id}")
-    //@PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
-    public ResponseEntity<Result> getAMovieByImdbID(@PathVariable String id){
-        return new ResponseEntity<>(Result.success(movieService.getAMovieByImdbID(id)), HttpStatus.OK);
-    }
+//    /**
+//     * 根据imdb_id获取一部电影
+//     * @param id
+//     * @return
+//     */
+//    @GetMapping("/imdb/{id}")
+//    //@PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
+//    public ResponseEntity<Result> getAMovieByImdbID(@PathVariable String id){
+//        return new ResponseEntity<>(Result.success(movieService.getAMovieByImdbID(id)), HttpStatus.OK);
+//    }
 
     /**
      * 获取评分最高的100部电影
