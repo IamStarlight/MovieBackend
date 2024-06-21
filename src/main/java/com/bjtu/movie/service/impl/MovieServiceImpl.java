@@ -260,6 +260,9 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
                 .select(Movie::getVoteAverage,Movie::getVoteCount);
         Movie movie = getOne(wrapper);
 
+        if(movie == null){
+            throw new ServiceException(HttpStatus.NOT_FOUND.value(), "电影不存在");
+        }
         Integer oldVoteCount = movie.getVoteCount();
         Double total = movie.getVoteAverage()*oldVoteCount;
 
@@ -397,7 +400,6 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
 
     @Override
     public List<Map<String,Object>> getRelatedRecommendMovie(Integer id) {
-
 //        String pythonPath = "C:\\Users\\84579\\Desktop\\Movie-Recommendation-System\\simpleIMDB.py";
         String pythonPath = "C:\\Users\\84579\\Desktop\\Movie-Recommendation-System\\content-plotDescription.py";
 //      String pythonPath = "C:\\Users\\84579\\Desktop\\Movie-Recommendation-System\\content-2.py";

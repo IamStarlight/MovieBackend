@@ -35,16 +35,16 @@ public class RatingsController {
 
     /**
      * 用户评分
-     * @param id
+     * @param mid
      * @param ratingDto
      * @return
      */
-    @PostMapping("/user/{uid}/movies/{id}/ratings")
+    @PostMapping("/user/{uid}/movies/{mid}/ratings")
     //@PreAuthorize("hasAnyAuthority('ROLE_USER')")
     public ResponseEntity<Result> createRating(@PathVariable Integer uid,
-                                               @PathVariable Integer id,
+                                               @PathVariable Integer mid,
                                                @RequestBody @Validated RatingDto ratingDto){
-        ratingsService.createRating(uid,id,ratingDto.getRating());
+        ratingsService.createRating(uid,mid,ratingDto.getRating());
         return new ResponseEntity<>(Result.success(), HttpStatus.OK);
     }
 
