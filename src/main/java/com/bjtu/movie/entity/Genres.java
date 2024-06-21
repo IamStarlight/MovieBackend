@@ -12,25 +12,28 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 
+ * 电影类别表
  * </p>
  *
  * @author Jinxuan Chen
- * @since 2024-05-25
+ * @since 2024-06-20
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("total")
-@ApiModel(value="Total对象", description="")
-public class Total implements Serializable {
+@TableName("genres")
+@ApiModel(value="Genres对象", description="电影类别表")
+public class Genres implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @ApiModelProperty(value = "类别id")
     private Integer id;
 
+    @ApiModelProperty(value = "类别名称")
     private String name;
 
-    private Integer total;
+    @ApiModelProperty(value = "是否删除")
+    private boolean deleted;
 
 }

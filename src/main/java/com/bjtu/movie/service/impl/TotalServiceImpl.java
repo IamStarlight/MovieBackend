@@ -22,16 +22,32 @@ public class TotalServiceImpl extends ServiceImpl<TotalMapper, Total> implements
     @Override
     public void updateMovieTotalPlus() {
         LambdaUpdateWrapper<Total> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(Total::getId,1)
-                .set(Total::getMovieTotal,getMovieId()+1);
+        wrapper.eq(Total::getName,"movies_metadata")
+                .set(Total::getTotal,getMovieId()+1);
         update(wrapper);
     }
 
     @Override
     public Integer getMovieId() {
         LambdaQueryWrapper<Total> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Total::getId,1)
-                .select(Total::getMovieTotal);
-        return getOne(wrapper).getMovieTotal();
+        wrapper.eq(Total::getName,"movies_metadata")
+                .select(Total::getTotal);
+        return getOne(wrapper).getTotal();
+    }
+
+    @Override
+    public void updateGenresTotalPlus() {
+        LambdaUpdateWrapper<Total> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(Total::getName,"genres")
+                .set(Total::getTotal,getGenresId()+1);
+        update(wrapper);
+    }
+
+    @Override
+    public Integer getGenresId() {
+        LambdaQueryWrapper<Total> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Total::getName,"genres")
+                .select(Total::getTotal);
+        return getOne(wrapper).getTotal();
     }
 }
