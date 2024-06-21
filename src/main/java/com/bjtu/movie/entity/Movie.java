@@ -13,6 +13,7 @@ import com.bjtu.movie.model.Collection;
 import com.bjtu.movie.model.Country;
 import com.bjtu.movie.model.Info;
 import com.bjtu.movie.model.Language;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -84,7 +85,8 @@ public class Movie implements Serializable {
     private List<Country> productionCountries;
 
     @ApiModelProperty(value = "上映时间")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+//    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd")
     private Date releaseDate;
 
     @ApiModelProperty(value = "收入")
@@ -99,6 +101,7 @@ public class Movie implements Serializable {
 
     @ApiModelProperty(value = "状态")
     private String status;
+    //enum('Canceled', 'In Production', 'Planned', 'Post Production', 'Released', 'Rumored')
 
     @ApiModelProperty(value = "宣传标语")
     private String tagline;
