@@ -29,7 +29,7 @@ public class KeywordsController {
      * @return
      */
     @GetMapping("/movies/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
+    //@PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
     public ResponseEntity<Result> getKeywordsByMovieId(@PathVariable Integer id){
         return new ResponseEntity<>(Result.success(keywordsService.getKeywordsByMovieId(id)), HttpStatus.OK);
     }

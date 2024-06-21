@@ -2,8 +2,10 @@ package com.bjtu.movie.model;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class Collection {
+public class Collection implements Serializable {
     /*
     {"id": 10194,
     "name": "Toy Story Collection",

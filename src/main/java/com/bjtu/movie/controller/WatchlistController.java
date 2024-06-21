@@ -29,7 +29,7 @@ public class WatchlistController {
      * @return
      */
     @PostMapping("/user/{id}/watchlist")
-    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
+    //@PreAuthorize("hasAnyAuthority('ROLE_USER')")
     public ResponseEntity<Result> addToWatchlist(@PathVariable Integer id,
                                                  @RequestParam Long movieId) {
 //        Integer userId = userService.getCurrentUser().getId();
@@ -43,7 +43,7 @@ public class WatchlistController {
      * @return
      */
     @GetMapping("/user/{id}/watchlist")
-    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
+    //@PreAuthorize("hasAnyAuthority('ROLE_USER')")
     public ResponseEntity<Result> getWatchlist(@PathVariable Integer id) {
 //        Integer userId = userService.getCurrentUser().getId();
         return new ResponseEntity<>(Result.success(watchlistService.getWatchlist(id)), HttpStatus.OK);

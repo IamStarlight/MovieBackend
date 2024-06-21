@@ -29,7 +29,7 @@ public class CreditsController {
      * @return
      */
     @GetMapping("/movies/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
+    //@PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
     public ResponseEntity<Result> getCreditsByMovieId(@PathVariable String id){
         return new ResponseEntity<>(Result.success(creditsService.getCreditsByMovieId(id)), HttpStatus.OK);
     }

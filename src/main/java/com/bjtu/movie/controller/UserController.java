@@ -27,7 +27,7 @@ public class UserController {
      * @return
      */
     @PutMapping("/security/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
+    //@PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
     public ResponseEntity<Result> updateUserPassword(@PathVariable Integer id,@RequestParam String password){
         userService.resetPassword(id,password);
         return new ResponseEntity<>((Result.success()),HttpStatus.OK);
@@ -40,7 +40,7 @@ public class UserController {
      * @return
      */
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
+    //@PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN','ROLE_USER')")
     public ResponseEntity<Result> updateUserInfo(@PathVariable Integer id, @RequestBody User info){
         userService.resetInfo(id,info);
         return new ResponseEntity<>((Result.success()),HttpStatus.OK);
@@ -51,7 +51,7 @@ public class UserController {
      * @return
      */
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+    //@PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
     public ResponseEntity<Result> getAllUser(){
         return new ResponseEntity<>(Result.success(userService.getAllUser()), HttpStatus.OK);
     }
@@ -62,7 +62,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+    //@PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
     public ResponseEntity<Result> getOneUser(@PathVariable Integer id){
         return new ResponseEntity<>(Result.success(userService.getOneUser(id)), HttpStatus.OK);
     }
@@ -73,7 +73,7 @@ public class UserController {
      * @return
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+    //@PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
     public ResponseEntity<Result> deleteOneUser(@PathVariable Integer id) {
         userService.deleteOneUser(id);
         return new ResponseEntity<>(Result.success(), HttpStatus.OK);
