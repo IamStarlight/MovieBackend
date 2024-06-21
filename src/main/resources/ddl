@@ -1,0 +1,89 @@
+-- auto-generated definition
+create table credits
+(
+    cast json null comment '演员信息',
+    crew json null comment '工作人员信息',
+    id   int  null comment '电影id'
+)
+    comment '演职人员信息';
+
+-- auto-generated definition
+create table admin
+(
+    id         int auto_increment comment '管理员id'
+        primary key,
+    name       varchar(255)         null comment '管理员名称',
+    password   varchar(255)         null comment '管理员密码',
+    permission varchar(255)         null comment '管理员权限',
+    created_at varchar(255)         null comment '创建时间',
+    deleted    tinyint(1) default 0 null comment '是否删除'
+)
+    comment '管理员表';
+
+-- auto-generated definition
+create table genres
+(
+    id      int          not null comment '类别id',
+    name    varchar(255) null comment '类别名称',
+    deleted tinyint(1)   null comment '是否删除',
+    constraint genres_pk
+        unique (id)
+)
+    comment '电影类别表';
+
+-- auto-generated definition
+create table watchlist
+(
+    user_id   int    null comment '用户id',
+    movie_id  bigint null comment '电影id',
+    timestamp bigint null comment '时间戳'
+)
+    comment '关注清单';
+
+-- auto-generated definition
+create table total
+(
+    id    int auto_increment comment '自增主键'
+        primary key,
+    name  varchar(255) null comment '数据库名称',
+    total int          null
+);
+
+-- auto-generated definition
+create table links_small
+(
+    movieId int          null comment '电影id',
+    imdbId  varchar(255) null comment 'imdb id',
+    tmdbId  varchar(255) null comment 'tmdb id'
+)
+    comment '电影id和imdb/tmdb id之间的映射';
+
+-- auto-generated definition
+create table links
+(
+    movieId int          null comment '电影id',
+    imdbId  varchar(255) null comment 'imdb id',
+    tmdbId  varchar(255) null comment 'tmdb id'
+)
+    comment '电影id和imdb/tmdb id之间的映射';
+
+-- auto-generated definition
+create table keywords
+(
+    id       int  null comment '电影id',
+    keywords json null comment '关键词'
+)
+    comment '关键词信息';
+
+-- auto-generated definition
+create table user
+(
+    id         int auto_increment comment '用户id'
+        primary key,
+    name       varchar(255)         null comment '用户名',
+    password   varchar(255)         null comment '用户密码',
+    permission varchar(255)         null comment '用户权限',
+    created_at varchar(255)         null comment '创建时间',
+    deleted    tinyint(1) default 0 null comment '是否删除'
+);
+
