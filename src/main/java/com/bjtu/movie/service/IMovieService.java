@@ -40,4 +40,11 @@ public interface IMovieService extends IService<Movie> {
 
     void updateTotalRating(Integer userId, Integer movieId, Double rating);
 
+    List<Map<String,Object>> getRecommendMovie(Integer id);
+
+    List<Map<String, Object>> getHotRecommendMovie();
+
+    Map<String, Object> getMovieBriefById(Integer id);
+
+    List<Map<String,Object>> getRelatedRecommendMovie(Integer id);
 }

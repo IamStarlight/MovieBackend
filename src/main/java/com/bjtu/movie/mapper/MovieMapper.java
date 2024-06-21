@@ -46,4 +46,9 @@ public interface MovieMapper extends BaseMapper<Movie> {
             "FROM movies_metadata as a LEFT JOIN poster as b ON a.id=b.id " +
             "WHERE deleted=0 ORDER BY popularity LIMIT 50")
     List<Map<String, Object>> getMostPopularNMovie();
+
+    @Select("SELECT a.id,title,b.poster_path,vote_average,vote_count,release_date,runtime " +
+            "FROM movies_metadata as a left JOIN poster as b ON a.id=b.id " +
+            "WHERE a.id=#{id} AND deleted=0")
+    Map<String, Object> getMovieBriefById(Integer id);
 }

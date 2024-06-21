@@ -15,8 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * <p>
@@ -83,7 +87,7 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
         wrapper.eq(Movie::isDeleted,false);
 
         //排序
-        if(!sort.isBlank()) {
+        if(!Objects.isNull(sort)) {
             wrapper.orderBy(sort.equals(Sort.SORT_BY_RATING.getValue()), isAsc(order), Movie::getVoteAverage);
             wrapper.orderBy(sort.equals(Sort.SORT_BY_NUMBER_OF_RATINGS.getValue()), isAsc(order), Movie::getVoteCount);
             wrapper.orderBy(sort.equals(Sort.SORT_BY_RELEASE_DATE.getValue()), isAsc(order), Movie::getReleaseDate);
@@ -92,21 +96,21 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
         }
 
         //筛选分类
-        if(!genres.isEmpty()){
+        if(!Objects.isNull(genres)){
             for (String i: genres) {
                 wrapper.apply("JSON_CONTAINS(JSON_EXTRACT(genres, '$[*].name'), CAST('\""+i+"\"' AS JSON), '$')");
             }
         }
 
         //筛选年份
-        if (!startYear.isBlank() && !endYear.isBlank()){
+        if (!Objects.isNull(startYear) && !Objects.isNull(endYear)){
             Date startDate = DateTimeUtil.getYearStartDate(startYear);
             Date endDate = DateTimeUtil.getYearEndDate(endYear);
             wrapper.between(Movie::getReleaseDate,startDate,endDate);
-        }else if(!startYear.isBlank()){
+        }else if(!Objects.isNull(startYear)){
             Date startDate = DateTimeUtil.getYearStartDate(startYear);
             wrapper.ge(Movie::getReleaseDate,startDate);
-        }else if(!endYear.isBlank()){
+        }else if(!Objects.isNull(endYear)){
             Date endDate = DateTimeUtil.getYearEndDate(endYear);
             wrapper.le(Movie::getReleaseDate,endDate);
         }
@@ -130,7 +134,7 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
         }
 
         //筛选关键词
-        if (!keywords.isEmpty()){
+        if (!Objects.isNull(keywords)){
             for (String i: keywords) {
                 wrapper.inSql(Movie::getId,
                         "select id from keywords "
@@ -265,5 +269,79 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie> implements
         movie.setVoteAverage(Double.valueOf(df.format(newVoteAverage)));
         movie.setVoteCount(oldVoteCount+1);
         updateAMovieInfo(movie);
+    }
+
+    @Override
+    public List<Map<String,Object>> getRecommendMovie(Integer id) {
+        return null;
+    }
+
+    @Override
+    public List<Map<String, Object>> getHotRecommendMovie() {
+        String pythonPath = "C:\\Users\\84579\\Desktop\\Movie-Recommendation-System\\simpleIMDB.py";
+//      String pythonPath = "C:\\Codefield\\CODE_PYTHON\\Movie-Recommendation-System\\content-plotDescription.py";
+//      String pythonPath = "C:\\Codefield\\CODE_PYTHON\\Movie-Recommendation-System\\content-2.py";
+//      String pythonPath = "C:\\Codefield\\CODE_PYTHON\\Movie-Recommendation-System\\collaborative-filtering.py";
+        String[] arguments = new String[] {"python",pythonPath};//指定命令、路径、传递的参数
+//      String[] arguments = new String[] {"python",pythonPath,String.valueOf(238)};//指定命令、路径、传递的参数
+//      String[] arguments = new String[] {"python",pythonPath,String.valueOf(238)};//指定命令、路径、传递的参数
+//      String[] arguments = new String[] {"python",pythonPath,String.valueOf(1)};//指定命令、路径、传递的参数
+        StringBuilder sbrs = null;
+        StringBuilder sberror = null;
+        try {
+            ProcessBuilder builder = new ProcessBuilder(arguments);
+            Process process = builder.start();
+            BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream(), "utf-8"));//获取字符输入流对象
+            BufferedReader error = new BufferedReader(new InputStreamReader(process.getErrorStream(), "utf-8"));//获取错误信息的字符输入流对象
+            String line = null;
+            sbrs = new StringBuilder();
+            sberror = new StringBuilder();
+            //记录输出结果
+            while ((line = in.readLine()) != null) {
+                sbrs.append(line);
+            }
+            //记录错误信息
+            while ((line = error.readLine()) != null) {
+                sberror.append(line);
+            }
+            in.close();
+            process.waitFor();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(sbrs);
+        System.out.println(sberror);
+
+        ArrayList<Integer> integerList = new ArrayList<>();
+        if (sbrs != null) {
+            // 去除方括号并分割字符串
+            String content = sbrs.toString().trim();
+            Pattern pattern = Pattern.compile("\\d+");
+            Matcher matcher = pattern.matcher(content);
+            while (matcher.find()) {
+                integerList.add(Integer.parseInt(matcher.group()));
+            }
+        }
+        System.out.println(integerList);
+        List<Map<String,Object>> result = new ArrayList<>();
+        for (Integer id : integerList) {
+            Map<String,Object> tmp = getMovieBriefById(id);
+            if(tmp != null) {
+                result.add(tmp);
+            }
+        }
+
+        System.out.println(sberror);
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> getMovieBriefById(Integer id) {
+        return movieMapper.getMovieBriefById(id);
+    }
+
+    @Override
+    public List<Map<String,Object>> getRelatedRecommendMovie(Integer id) {
+        return null;
     }
 }
